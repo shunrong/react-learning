@@ -1,35 +1,57 @@
 import { useState } from 'react';
-import { Routes, Route, Link, useParams, useLocation, Outlet, Navigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Layers, 
-  User, 
-  Settings, 
-  BarChart3, 
-  Mail, 
-  Bell,
+import {
+  Routes,
+  Route,
+  Link,
+  useParams,
+  useLocation,
+  Outlet,
+  Navigate,
+} from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {
+  Layers,
+  User,
+  Settings,
+  BarChart3,
   Shield,
   Code,
   ArrowLeft,
   ExternalLink,
   Users,
   MessageSquare,
-  Calendar,
-  FileText
 } from 'lucide-react';
 
 // 模拟用户数据
 const users = {
-  '123': { id: '123', name: 'Alice Johnson', role: 'Admin', email: 'alice@example.com', avatar: '👩‍💻' },
-  '456': { id: '456', name: 'Bob Smith', role: 'Developer', email: 'bob@example.com', avatar: '👨‍💼' },
-  '789': { id: '789', name: 'Carol Williams', role: 'Designer', email: 'carol@example.com', avatar: '👩‍🎨' }
+  '123': {
+    id: '123',
+    name: 'Alice Johnson',
+    role: 'Admin',
+    email: 'alice@example.com',
+    avatar: '👩‍💻',
+  },
+  '456': {
+    id: '456',
+    name: 'Bob Smith',
+    role: 'Developer',
+    email: 'bob@example.com',
+    avatar: '👨‍💼',
+  },
+  '789': {
+    id: '789',
+    name: 'Carol Williams',
+    role: 'Designer',
+    email: 'carol@example.com',
+    avatar: '👩‍🎨',
+  },
 };
 
 // 用户资料组件
 function UserProfile() {
   const { userId } = useParams();
-  const user = users[userId];
-  
+  const user = userId ? users[userId as keyof typeof users] : undefined;
+
   if (!user) {
     return (
       <div className='text-center py-8'>
@@ -38,7 +60,7 @@ function UserProfile() {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -56,7 +78,7 @@ function UserProfile() {
           <p className='text-sm text-gray-500'>{user.email}</p>
         </div>
       </div>
-      
+
       <div className='grid grid-cols-2 gap-4'>
         <div className='bg-blue-50 rounded-lg p-4'>
           <h3 className='font-medium text-blue-900 mb-2'>项目数量</h3>
@@ -74,11 +96,11 @@ function UserProfile() {
 // 用户设置组件
 function UserSettings() {
   const { userId } = useParams();
-  const user = users[userId];
-  
+  const user = userId ? users[userId as keyof typeof users] : undefined;
+
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -90,7 +112,7 @@ function UserSettings() {
         <Settings className='w-5 h-5 mr-2' />
         {user?.name} 的设置
       </h2>
-      
+
       <div className='space-y-6'>
         <div>
           <h3 className='text-lg font-medium text-gray-900 mb-4'>通知设置</h3>
@@ -100,7 +122,7 @@ function UserSettings() {
               <input
                 type='checkbox'
                 checked={notifications}
-                onChange={(e) => setNotifications(e.target.checked)}
+                onChange={e => setNotifications(e.target.checked)}
                 className='rounded border-gray-300'
               />
             </label>
@@ -109,13 +131,13 @@ function UserSettings() {
               <input
                 type='checkbox'
                 checked={emailUpdates}
-                onChange={(e) => setEmailUpdates(e.target.checked)}
+                onChange={e => setEmailUpdates(e.target.checked)}
                 className='rounded border-gray-300'
               />
             </label>
           </div>
         </div>
-        
+
         <div>
           <h3 className='text-lg font-medium text-gray-900 mb-4'>账户安全</h3>
           <div className='space-y-3'>
@@ -136,15 +158,15 @@ function UserSettings() {
 
 // 用户分析组件
 function UserAnalytics() {
-  const { userId } = useParams();
-  
+  const { userId: _userId } = useParams();
+
   const stats = [
     { label: '页面浏览', value: '2,847', trend: '+12%' },
     { label: '活动时间', value: '45.2h', trend: '+8%' },
     { label: '完成率', value: '94.2%', trend: '+5%' },
-    { label: '评分', value: '4.8/5', trend: '0%' }
+    { label: '评分', value: '4.8/5', trend: '0%' },
   ];
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -156,23 +178,31 @@ function UserAnalytics() {
         <BarChart3 className='w-5 h-5 mr-2' />
         数据分析
       </h2>
-      
+
       <div className='grid grid-cols-2 gap-4 mb-6'>
         {stats.map((stat, index) => (
           <div key={index} className='bg-gray-50 rounded-lg p-4'>
-            <h3 className='text-sm font-medium text-gray-600 mb-1'>{stat.label}</h3>
+            <h3 className='text-sm font-medium text-gray-600 mb-1'>
+              {stat.label}
+            </h3>
             <div className='flex items-center justify-between'>
-              <span className='text-2xl font-bold text-gray-900'>{stat.value}</span>
-              <span className={`text-sm ${
-                stat.trend.startsWith('+') ? 'text-green-600' : 'text-gray-500'
-              }`}>
+              <span className='text-2xl font-bold text-gray-900'>
+                {stat.value}
+              </span>
+              <span
+                className={`text-sm ${
+                  stat.trend.startsWith('+')
+                    ? 'text-green-600'
+                    : 'text-gray-500'
+                }`}
+              >
                 {stat.trend}
               </span>
             </div>
           </div>
         ))}
       </div>
-      
+
       <div className='bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4'>
         <div className='w-full h-32 bg-gradient-to-r from-blue-200 to-purple-200 rounded opacity-50 flex items-center justify-center'>
           <span className='text-gray-600'>📊 图表占位符</span>
@@ -185,11 +215,29 @@ function UserAnalytics() {
 // 用户消息组件
 function UserMessages() {
   const messages = [
-    { id: 1, from: 'System', content: '欢迎使用我们的平台！', time: '2小时前', unread: true },
-    { id: 2, from: 'Alice', content: '项目进展如何？', time: '1天前', unread: false },
-    { id: 3, from: 'Support', content: '您的问题已解决', time: '3天前', unread: false }
+    {
+      id: 1,
+      from: 'System',
+      content: '欢迎使用我们的平台！',
+      time: '2小时前',
+      unread: true,
+    },
+    {
+      id: 2,
+      from: 'Alice',
+      content: '项目进展如何？',
+      time: '1天前',
+      unread: false,
+    },
+    {
+      id: 3,
+      from: 'Support',
+      content: '您的问题已解决',
+      time: '3天前',
+      unread: false,
+    },
   ];
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -201,12 +249,17 @@ function UserMessages() {
         <MessageSquare className='w-5 h-5 mr-2' />
         消息中心
       </h2>
-      
+
       <div className='space-y-3'>
-        {messages.map((message) => (
-          <div key={message.id} className={`p-4 rounded-lg border ${
-            message.unread ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'
-          }`}>
+        {messages.map(message => (
+          <div
+            key={message.id}
+            className={`p-4 rounded-lg border ${
+              message.unread
+                ? 'bg-blue-50 border-blue-200'
+                : 'bg-gray-50 border-gray-200'
+            }`}
+          >
             <div className='flex items-center justify-between mb-2'>
               <span className='font-medium text-gray-900'>{message.from}</span>
               <span className='text-sm text-gray-500'>{message.time}</span>
@@ -226,21 +279,27 @@ function UserMessages() {
 function UserDetailPage() {
   const { userId } = useParams();
   const location = useLocation();
-  const user = users[userId];
-  
+  const user = userId ? users[userId as keyof typeof users] : undefined;
+
   if (!user) {
     return <Navigate to='/examples/nested' replace />;
   }
-  
+
   const tabs = [
     { id: 'profile', label: '个人资料', icon: User, path: 'profile' },
     { id: 'settings', label: '设置', icon: Settings, path: 'settings' },
     { id: 'analytics', label: '分析', icon: BarChart3, path: 'analytics' },
-    { id: 'messages', label: '消息', icon: MessageSquare, path: 'messages', badge: '3' }
+    {
+      id: 'messages',
+      label: '消息',
+      icon: MessageSquare,
+      path: 'messages',
+      badge: '3',
+    },
   ];
-  
+
   const currentTab = location.pathname.split('/').pop();
-  
+
   return (
     <div>
       {/* 用户头部信息 */}
@@ -252,21 +311,26 @@ function UserDetailPage() {
             </div>
             <div>
               <h1 className='text-2xl font-bold'>{user.name}</h1>
-              <p className='text-blue-100'>{user.role} • ID: {userId}</p>
+              <p className='text-blue-100'>
+                {user.role} • ID: {userId}
+              </p>
             </div>
           </div>
-          <Link to='/examples/nested' className='btn bg-white/20 text-white border-white/30 hover:bg-white/30'>
+          <Link
+            to='/examples/nested'
+            className='btn bg-white/20 text-white border-white/30 hover:bg-white/30'
+          >
             <ArrowLeft className='w-4 h-4 mr-2' />
             返回列表
           </Link>
         </div>
       </div>
-      
+
       {/* 标签导航 */}
       <div className='bg-white rounded-lg border border-gray-200 mb-6'>
         <div className='border-b border-gray-200'>
           <nav className='flex space-x-8 px-6'>
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <Link
                 key={tab.id}
                 to={tab.path}
@@ -287,7 +351,7 @@ function UserDetailPage() {
             ))}
           </nav>
         </div>
-        
+
         {/* 嵌套路由内容 */}
         <div className='p-6'>
           <Outlet />
@@ -305,9 +369,9 @@ function UserListPage() {
         <h1 className='text-2xl font-bold text-gray-900 mb-2'>用户管理</h1>
         <p className='text-gray-600'>点击用户查看详细信息和嵌套路由演示</p>
       </div>
-      
+
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {Object.values(users).map((user) => (
+        {Object.values(users).map(user => (
           <Link
             key={user.id}
             to={`user/${user.id}/profile`}
@@ -339,7 +403,7 @@ function UserListPage() {
 // 主嵌套路由示例组件
 function NestedRoutingExample() {
   const location = useLocation();
-  
+
   const codeExample = `// 嵌套路由配置
 import { Routes, Route, Outlet } from 'react-router-dom';
 
@@ -403,17 +467,19 @@ function UserDetail() {
                   <Layers className='w-6 h-6 text-purple-600' />
                 </div>
                 <div>
-                  <h1 className='text-3xl font-bold text-gray-900'>嵌套路由示例</h1>
+                  <h1 className='text-3xl font-bold text-gray-900'>
+                    嵌套路由示例
+                  </h1>
                   <p className='text-gray-600 mt-1'>构建复杂的多层页面结构</p>
                 </div>
               </div>
-              
+
               <Link to='/examples/basic' className='btn btn-outline'>
                 <ArrowLeft className='w-4 h-4 mr-2' />
                 返回基础示例
               </Link>
             </div>
-            
+
             <div className='bg-purple-50 border border-purple-200 rounded-lg p-4'>
               <div className='flex items-center text-sm text-purple-800'>
                 <Layers className='w-4 h-4 mr-2' />
@@ -442,7 +508,7 @@ function UserDetail() {
               </Route>
             </Routes>
           </div>
-          
+
           {/* 右侧：代码示例和说明 */}
           <div className='space-y-6'>
             <motion.div
@@ -468,7 +534,7 @@ function UserDetail() {
                 </div>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -476,42 +542,49 @@ function UserDetail() {
               className='card'
             >
               <div className='card-header'>
-                <h2 className='text-lg font-semibold text-gray-900'>💡 核心概念</h2>
+                <h2 className='text-lg font-semibold text-gray-900'>
+                  💡 核心概念
+                </h2>
               </div>
               <div className='card-content space-y-4'>
                 <div>
-                  <h3 className='font-medium text-gray-900 mb-2'>Outlet 组件</h3>
+                  <h3 className='font-medium text-gray-900 mb-2'>
+                    Outlet 组件
+                  </h3>
                   <p className='text-gray-600 text-sm'>
-                    <code className='bg-gray-100 px-1 rounded'>&lt;Outlet /&gt;</code> 是子路由的渲染位置，
-                    类似于插槽机制。
+                    <code className='bg-gray-100 px-1 rounded'>
+                      &lt;Outlet /&gt;
+                    </code>{' '}
+                    是子路由的渲染位置， 类似于插槽机制。
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className='font-medium text-gray-900 mb-2'>路由层级</h3>
                   <p className='text-gray-600 text-sm'>
-                    通过嵌套的 <code className='bg-gray-100 px-1 rounded'>Route</code> 组件
+                    通过嵌套的{' '}
+                    <code className='bg-gray-100 px-1 rounded'>Route</code> 组件
                     定义多层路由结构。
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className='font-medium text-gray-900 mb-2'>相对路径</h3>
                   <p className='text-gray-600 text-sm'>
                     子路由使用相对路径，会自动继承父路由的路径前缀。
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className='font-medium text-gray-900 mb-2'>Index 路由</h3>
                   <p className='text-gray-600 text-sm'>
-                    <code className='bg-gray-100 px-1 rounded'>index</code> 属性定义默认子路由，
-                    当访问父路径时显示。
+                    <code className='bg-gray-100 px-1 rounded'>index</code>{' '}
+                    属性定义默认子路由， 当访问父路径时显示。
                   </p>
                 </div>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}

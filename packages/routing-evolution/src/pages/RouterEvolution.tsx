@@ -1,11 +1,5 @@
 import { motion } from 'framer-motion';
-import {
-  GitBranch,
-  ArrowRight,
-  ExternalLink,
-  Calendar,
-  Star,
-} from 'lucide-react';
+import { GitBranch, ArrowRight, Calendar, Star } from 'lucide-react';
 
 const versions = [
   {
@@ -131,7 +125,7 @@ function RouterEvolution() {
             </h2>
 
             <div className='space-y-8'>
-              {milestones.map((milestone, index) => (
+              {milestones.map(milestone => (
                 <div key={milestone.date} className='timeline-item'>
                   <div className='timeline-dot'>
                     <div className='w-3 h-3 bg-white rounded-full'></div>

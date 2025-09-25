@@ -401,7 +401,9 @@ function Component() {
                     </span>
                   </div>
                   <pre className='p-4 text-sm text-gray-100 overflow-x-auto leading-relaxed'>
-                    <code>{codeExamples[activeTab]}</code>
+                    <code>
+                      {codeExamples[activeTab as keyof typeof codeExamples]}
+                    </code>
                   </pre>
                 </div>
               </div>

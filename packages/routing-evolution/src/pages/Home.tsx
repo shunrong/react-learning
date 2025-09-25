@@ -136,7 +136,7 @@ function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className='grid grid-cols-2 md:grid-cols-4 gap-8'
           >
-            {stats.map((stat, index) => (
+            {stats.map(stat => (
               <div key={stat.label} className='text-center'>
                 <div className='flex justify-center mb-3'>
                   <div className='w-12 h-12 bg-route-100 rounded-xl flex items-center justify-center'>
@@ -224,7 +224,7 @@ function Home() {
                 通过这些精选示例快速上手 React Router 的核心功能
               </p>
               <div className='space-y-3'>
-                {quickLinks.map((link, index) => (
+                {quickLinks.map(link => (
                   <Link
                     key={link.path}
                     to={link.path}
