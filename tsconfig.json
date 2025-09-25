@@ -20,12 +20,13 @@
     "sourceMap": true,
     "removeComments": false,
     "baseUrl": ".",
-  "paths": {
-    "@hooks/*": ["packages/hooks-playground/src/*"],
-    "@react-15/*": ["packages/react-15-demo/src/*"],
-    "@react-16/*": ["packages/react-16-fiber/src/*"],
-    "@state/*": ["packages/state-management/src/*"]
-  }
+    "paths": {
+      "@hooks/*": ["packages/hooks-playground/src/*"],
+      "@react-15/*": ["packages/react-15-demo/src/*"],
+      "@react-16/*": ["packages/react-16-fiber/src/*"],
+      "@state/*": ["packages/state-management/src/*"],
+      "@routing/*": ["packages/routing-evolution/src/*"]
+    }
   },
   "include": [
     "packages/*/src/**/*",
@@ -40,6 +41,7 @@
   ],
   "references": [
     { "path": "./packages/hooks-playground" },
-    { "path": "./packages/state-management" }
+    { "path": "./packages/state-management" },
+    { "path": "./packages/routing-evolution" }
   ]
 }
