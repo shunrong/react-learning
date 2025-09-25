@@ -18,6 +18,7 @@
     "docs:dev": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
     "docs:serve": "pnpm --filter docs serve",
+    "perf:dev": "pnpm --filter performance-optimization dev",
     "clean": "pnpm -r clean && rm -rf node_modules",
     "prepare": "husky install"
   },

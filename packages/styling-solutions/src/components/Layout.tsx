@@ -9,8 +9,9 @@ import {
   BarChart3,
   Menu,
   X,
-  Github,
   BookOpen,
+  ExternalLink,
+  Wind,
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -19,11 +20,18 @@ interface LayoutProps {
 
 const navigation = [
   { name: '首页', href: '/', icon: Home },
+  {
+    name: '理论文档',
+    href: '/docs/concepts/styling',
+    icon: BookOpen,
+    external: true,
+    description: '深入了解样式方案原理',
+  },
   { name: 'CSS Modules', href: '/css-modules', icon: FileText },
   { name: 'Styled Components', href: '/styled-components', icon: Palette },
   { name: 'Emotion', href: '/emotion', icon: Zap },
-  { name: 'Tailwind CSS', href: '/tailwind', icon: BarChart3 },
-  { name: '方案对比', href: '/comparison', icon: BookOpen },
+  { name: 'Tailwind CSS', href: '/tailwind', icon: Wind },
+  { name: '方案对比', href: '/comparison', icon: BarChart3 },
   { name: '性能测试', href: '/performance', icon: BarChart3 },
 ];
 
@@ -72,19 +80,40 @@ export default function Layout({ children }: LayoutProps) {
           {/* 导航菜单 */}
           <nav className='flex-1 px-4 py-6 space-y-2'>
             {navigation.map(item => {
-              const isActive = location.pathname === item.href;
+              const isActive =
+                !item.external && location.pathname === item.href;
               const Icon = item.icon;
+
+              const className = `flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isActive
+                  ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              }`;
+
+              if (item.external) {
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    onClick={() => setSidebarOpen(false)}
+                    className={className}
+                    title={item.description}
+                  >
+                    <Icon className='w-5 h-5 mr-3' />
+                    <span className='flex-1'>{item.name}</span>
+                    <ExternalLink className='w-4 h-4 opacity-50' />
+                  </a>
+                );
+              }
 
               return (
                 <Link
                   key={item.name}
                   to={item.href}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
+                  className={className}
                 >
                   <Icon className='w-5 h-5 mr-3' />
                   {item.name}
@@ -95,15 +124,22 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* 底部信息 */}
           <div className='p-6 border-t border-gray-200'>
-            <div className='flex items-center justify-between text-sm text-gray-500'>
-              <span>React 样式方案学习</span>
+            <div className='text-center'>
+              <div className='text-sm text-gray-500 mb-2'>
+                React 样式方案实战演示
+              </div>
+              <div className='text-xs text-gray-400 mb-3'>
+                通过交互式演示体验四种主流方案
+              </div>
               <a
-                href='https://github.com'
+                href='/docs/concepts/styling'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='p-1 rounded hover:text-gray-700'
+                className='inline-flex items-center text-xs text-blue-600 hover:text-blue-700'
               >
-                <Github className='w-4 h-4' />
+                <BookOpen className='w-3 h-3 mr-1' />
+                查看理论文档
+                <ExternalLink className='w-3 h-3 ml-1' />
               </a>
             </div>
           </div>

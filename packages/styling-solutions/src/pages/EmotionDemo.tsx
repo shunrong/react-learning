@@ -891,56 +891,60 @@ const AnimatedBox = styled.div\`
                 }
               `}
             >
-              <div>
+              <div
+                css={css`
+                  text-align: center;
+                  padding: 24px;
+                `}
+              >
                 <h4
                   css={css`
-                    color: #10b981;
+                    color: ${currentTheme.colors.primary};
                     font-weight: bold;
-                    margin-bottom: 12px;
+                    margin-bottom: 16px;
+                    font-size: 20px;
                   `}
                 >
-                  ✅ 适用场景
+                  🎨 Emotion 演示完成
                 </h4>
-                <ul
+                <p
                   css={css`
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
                     color: ${currentTheme.colors.text}aa;
-                    line-height: 1.6;
+                    margin-bottom: 20px;
                   `}
                 >
-                  <li>• 需要强类型支持的项目</li>
-                  <li>• 对性能有较高要求的应用</li>
-                  <li>• 复杂的主题系统</li>
-                  <li>• 需要动态样式的场景</li>
-                </ul>
-              </div>
+                  体验了 Emotion 的强大功能，想了解更多技术细节和适用场景？
+                </p>
+                <a
+                  href='/docs/concepts/styling'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  css={css`
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 12px 24px;
+                    background: ${currentTheme.colors.primary};
+                    color: white;
+                    text-decoration: none;
+                    border-radius: ${currentTheme.borderRadius}px;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
 
-              <div>
-                <h4
-                  css={css`
-                    color: #ef4444;
-                    font-weight: bold;
-                    margin-bottom: 12px;
+                    &:hover {
+                      background: ${currentTheme.colors.primary}dd;
+                      transform: translateY(-2px);
+                    }
                   `}
                 >
-                  ⚠️ 注意事项
-                </h4>
-                <ul
-                  css={css`
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                    color: ${currentTheme.colors.text}aa;
-                    line-height: 1.6;
-                  `}
-                >
-                  <li>• 学习成本相对较高</li>
-                  <li>• 需要配置 Babel 插件</li>
-                  <li>• 运行时样式注入的性能考虑</li>
-                  <li>• 服务端渲染需要额外配置</li>
-                </ul>
+                  查看深度理论分析
+                  <ArrowRight
+                    css={css`
+                      width: 16px;
+                      height: 16px;
+                      margin-left: 8px;
+                    `}
+                  />
+                </a>
               </div>
             </div>
 
@@ -963,37 +967,38 @@ const AnimatedBox = styled.div\`
               >
                 💡 Emotion 是现代 React 应用中 CSS-in-JS 的优秀选择
               </span>
-                <a
-                  href='https://emotion.sh/docs/introduction'
-                  target='_blank'
-                  rel='noopener noreferrer'
+              <a
+                href='https://emotion.sh/docs/introduction'
+                target='_blank'
+                rel='noopener noreferrer'
+                css={css`
+                  display: inline-flex;
+                  align-items: center;
+                  padding: ${currentTheme.spacing.small}px
+                    ${currentTheme.spacing.medium}px;
+                  background: ${currentTheme.colors.primary};
+                  color: white;
+                  text-decoration: none;
+                  border-radius: ${currentTheme.borderRadius}px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  transition: all 0.3s ease;
+
+                  &:hover {
+                    background: ${currentTheme.colors.primary}dd;
+                    transform: translateY(-1px);
+                  }
+                `}
+              >
+                查看文档
+                <ArrowRight
                   css={css`
-                    display: inline-flex;
-                    align-items: center;
-                    padding: ${currentTheme.spacing.small}px ${currentTheme.spacing.medium}px;
-                    background: ${currentTheme.colors.primary};
-                    color: white;
-                    text-decoration: none;
-                    border-radius: ${currentTheme.borderRadius}px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    transition: all 0.3s ease;
-                    
-                    &:hover {
-                      background: ${currentTheme.colors.primary}dd;
-                      transform: translateY(-1px);
-                    }
+                    width: 16px;
+                    height: 16px;
+                    margin-left: 4px;
                   `}
-                >
-                  查看文档
-                  <ArrowRight
-                    css={css`
-                      width: 16px;
-                      height: 16px;
-                      margin-left: 4px;
-                    `}
-                  />
-                </a>
+                />
+              </a>
             </div>
           </Card>
         </Container>

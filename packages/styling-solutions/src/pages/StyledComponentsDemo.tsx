@@ -951,7 +951,9 @@ export default function StyledComponentsDemo() {
                     value={formData.email}
                     onChange={e => handleInputChange('email', e.target.value)}
                     placeholder='your@email.com'
-                    hasError={formData.email ? !formData.email.includes('@') : false}
+                    hasError={
+                      formData.email ? !formData.email.includes('@') : false
+                    }
                   />
                   {formData.email && !formData.email.includes('@') && (
                     <ErrorText>请输入有效的邮箱地址</ErrorText>

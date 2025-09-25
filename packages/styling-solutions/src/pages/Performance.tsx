@@ -14,6 +14,8 @@ import {
   RotateCcw,
   CheckCircle,
   AlertTriangle,
+  ExternalLink,
+  BookOpen,
 } from 'lucide-react';
 
 interface PerformanceMetrics {
@@ -210,6 +212,20 @@ export default function Performance() {
         <p className='text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed'>
           通过真实的性能数据对比，了解不同样式方案的运行时表现和资源消耗
         </p>
+
+        {/* 理论文档链接 */}
+        <div className='mt-8'>
+          <a
+            href='/docs/concepts/styling'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'
+          >
+            <BookOpen className='w-5 h-5 mr-2' />
+            查看性能优化理论
+            <ExternalLink className='w-4 h-4 ml-2' />
+          </a>
+        </div>
       </motion.div>
 
       {/* 测试控制面板 */}

@@ -684,26 +684,22 @@ export default function TailwindDemo() {
             </ul>
           </div>
 
-          <div>
-            <h3 className='text-orange-600 font-bold mb-3'>⚠️ 注意事项</h3>
-            <ul className='space-y-2 text-gray-700'>
-              <li className='flex items-start'>
-                <div className='w-4 h-4 bg-orange-500 rounded-full mr-2 mt-0.5 flex-shrink-0'></div>
-                HTML 类名会变得很长
-              </li>
-              <li className='flex items-start'>
-                <div className='w-4 h-4 bg-orange-500 rounded-full mr-2 mt-0.5 flex-shrink-0'></div>
-                初期学习成本较高
-              </li>
-              <li className='flex items-start'>
-                <div className='w-4 h-4 bg-orange-500 rounded-full mr-2 mt-0.5 flex-shrink-0'></div>
-                需要配置 PurgeCSS 以减小体积
-              </li>
-              <li className='flex items-start'>
-                <div className='w-4 h-4 bg-orange-500 rounded-full mr-2 mt-0.5 flex-shrink-0'></div>
-                复杂动画需要自定义实现
-              </li>
-            </ul>
+          <div className='text-center'>
+            <h3 className='text-cyan-600 font-bold mb-4 text-xl'>
+              🌪️ Tailwind CSS 演示完成
+            </h3>
+            <p className='text-gray-600 mb-6'>
+              体验了 Tailwind CSS 的实用优先方法，想了解更多设计理念和技术细节？
+            </p>
+            <a
+              href='/docs/concepts/styling'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium'
+            >
+              查看深度理论分析
+              <ArrowRight className='w-4 h-4 ml-2' />
+            </a>
           </div>
         </div>
 
