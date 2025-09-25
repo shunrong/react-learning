@@ -24,7 +24,6 @@
       "@/*": ["src/*"],
       "@/components/*": ["src/components/*"],
       "@/examples/*": ["src/examples/*"],
-      "@/hooks/*": ["src/hooks/*"],
       "@/utils/*": ["src/utils/*"],
       "@/types/*": ["src/types/*"]
     }
