@@ -1,0 +1,220 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* 全局样式 */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans;
+  }
+  
+  * {
+    @apply border-gray-200;
+  }
+}
+
+/* 组件样式 */
+@layer components {
+  .nav-link {
+    @apply px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200;
+  }
+  
+  .nav-link.active {
+    @apply text-route-700 bg-route-50 border border-route-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden;
+  }
+  
+  .card-header {
+    @apply px-6 py-4 border-b border-gray-200 bg-gray-50;
+  }
+  
+  .card-content {
+    @apply p-6;
+  }
+  
+  .btn {
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-route-600 text-white hover:bg-route-700 focus:ring-route-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-500;
+  }
+  
+  .code-block {
+    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed;
+  }
+  
+  .demo-container {
+    @apply bg-white rounded-lg border border-gray-200 p-6 space-y-4;
+  }
+  
+  .route-indicator {
+    @apply inline-flex items-center px-2 py-1 text-xs font-medium bg-route-100 text-route-800 rounded;
+  }
+  
+  .timeline-item {
+    @apply relative flex items-start space-x-3;
+  }
+  
+  .timeline-item::before {
+    @apply absolute left-4 top-8 h-full w-px bg-gray-200;
+    content: '';
+  }
+  
+  .timeline-item:last-child::before {
+    @apply hidden;
+  }
+  
+  .timeline-dot {
+    @apply flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-route-600 shadow;
+  }
+}
+
+/* 动画样式 */
+@layer utilities {
+  .animate-route-enter {
+    animation: routeEnter 0.3s ease-out forwards;
+  }
+  
+  .animate-route-exit {
+    animation: routeExit 0.2s ease-in forwards;
+  }
+  
+  .page-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  .sidebar-transition {
+    @apply transition-all duration-200 ease-in-out;
+  }
+}
+
+@keyframes routeEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes routeExit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .card-content {
+    @apply p-4;
+  }
+  
+  .btn {
+    @apply px-3 py-2 text-xs;
+  }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* 代码语法高亮 */
+.hljs {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.hljs-keyword {
+  @apply text-blue-400;
+}
+
+.hljs-string {
+  @apply text-green-400;
+}
+
+.hljs-comment {
+  @apply text-gray-500 italic;
+}
+
+.hljs-function {
+  @apply text-yellow-400;
+}
+
+.hljs-variable {
+  @apply text-purple-400;
+}
+
+/* 特殊效果 */
+.gradient-text {
+  @apply bg-gradient-to-r from-route-600 to-primary-600 bg-clip-text text-transparent;
+}
+
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-sm border border-white/20;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  40% {
+    color: currentColor;
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  60% {
+    text-shadow:
+      .25em 0 0 currentColor,
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 currentColor,
+      .5em 0 0 currentColor;
+  }
+}
