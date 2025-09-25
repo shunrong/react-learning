@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Puzzle, 
-  Code, 
-  Settings, 
-  Shield, 
-  Layers, 
+import {
+  Puzzle,
+  Code,
+  Settings,
+  Shield,
+  Layers,
   Zap,
   CheckCircle,
   ArrowRight,
@@ -43,7 +43,7 @@ function RoutePatterns() {
 }
 
 // 使用方式
-const ProtectedDashboard = withAuth(Dashboard, 'admin');`
+const ProtectedDashboard = withAuth(Dashboard, 'admin');`,
         },
         {
           name: '组件级守卫',
@@ -70,9 +70,9 @@ const ProtectedDashboard = withAuth(Dashboard, 'admin');`
   <ProtectedRoute requiredPermission="admin">
     <AdminPanel />
   </ProtectedRoute>
-} />`
-        }
-      ]
+} />`,
+        },
+      ],
     },
     {
       title: '懒加载模式',
@@ -102,7 +102,7 @@ function App() {
       />
     </Routes>
   );
-}`
+}`,
         },
         {
           name: '错误边界懒加载',
@@ -121,9 +121,9 @@ function LazyWrapper({ children }) {
       </Suspense>
     </ErrorBoundary>
   );
-}`
-        }
-      ]
+}`,
+        },
+      ],
     },
     {
       title: '嵌套路由模式',
@@ -161,7 +161,7 @@ function Layout() {
       <Footer />
     </div>
   );
-}`
+}`,
         },
         {
           name: '动态嵌套',
@@ -181,9 +181,9 @@ function Layout() {
       </div>
     </div>
   );
-}`
-        }
-      ]
+}`,
+        },
+      ],
     },
     {
       title: '模态路由模式',
@@ -215,7 +215,7 @@ function Layout() {
       )}
     </>
   );
-}`
+}`,
         },
         {
           name: '模态管理',
@@ -237,9 +237,9 @@ function Layout() {
   };
   
   return { openModal, closeModal };
-}`
-        }
-      ]
+}`,
+        },
+      ],
     },
     {
       title: '动态路由模式',
@@ -281,7 +281,7 @@ function DynamicRoutes({ config }) {
       ))}
     </Routes>
   );
-}`
+}`,
         },
         {
           name: '权限驱动路由',
@@ -301,10 +301,10 @@ function DynamicRoutes({ config }) {
   }, [user]);
   
   return routes;
-}`
-        }
-      ]
-    }
+}`,
+        },
+      ],
+    },
   ];
 
   const antiPatterns = [
@@ -312,27 +312,39 @@ function DynamicRoutes({ config }) {
       title: '深层嵌套',
       description: '避免超过 3-4 层的路由嵌套',
       problem: '/app/dashboard/analytics/reports/details/settings',
-      solution: '/analytics/reports/:id/settings'
+      solution: '/analytics/reports/:id/settings',
     },
     {
       title: '状态依赖路由',
       description: '路由不应该依赖组件内部状态',
       problem: 'URL 不反映实际的应用状态',
-      solution: '将重要状态提升到 URL 参数中'
+      solution: '将重要状态提升到 URL 参数中',
     },
     {
       title: '硬编码路径',
       description: '避免在组件中硬编码路由路径',
       problem: 'navigate("/dashboard/settings")',
-      solution: 'navigate(routes.dashboard.settings)'
-    }
+      solution: 'navigate(routes.dashboard.settings)',
+    },
   ];
 
   const checklist = [
-    { category: '设计原则', items: ['路由层级清晰', 'URL 语义化', '状态可恢复', '用户友好'] },
-    { category: '性能优化', items: ['懒加载实现', '预加载策略', '缓存机制', '错误边界'] },
-    { category: '安全考虑', items: ['权限验证', '参数校验', '防 CSRF', '敏感信息保护'] },
-    { category: '用户体验', items: ['加载状态', '错误处理', '动画过渡', '无障碍访问'] }
+    {
+      category: '设计原则',
+      items: ['路由层级清晰', 'URL 语义化', '状态可恢复', '用户友好'],
+    },
+    {
+      category: '性能优化',
+      items: ['懒加载实现', '预加载策略', '缓存机制', '错误边界'],
+    },
+    {
+      category: '安全考虑',
+      items: ['权限验证', '参数校验', '防 CSRF', '敏感信息保护'],
+    },
+    {
+      category: '用户体验',
+      items: ['加载状态', '错误处理', '动画过渡', '无障碍访问'],
+    },
   ];
 
   return (
@@ -368,7 +380,7 @@ function DynamicRoutes({ config }) {
               <Code className='w-6 h-6 mr-2 text-indigo-600' />
               核心设计模式
             </h2>
-            
+
             <div className='space-y-12'>
               {patterns.map((pattern, index) => (
                 <motion.div
@@ -381,25 +393,35 @@ function DynamicRoutes({ config }) {
                   <div className='card-header'>
                     <div className='flex items-center justify-between mb-4'>
                       <div className='flex items-center'>
-                        <div className={`w-10 h-10 bg-${pattern.color}-100 rounded-lg flex items-center justify-center mr-3`}>
-                          <pattern.icon className={`w-5 h-5 text-${pattern.color}-600`} />
+                        <div
+                          className={`w-10 h-10 bg-${pattern.color}-100 rounded-lg flex items-center justify-center mr-3`}
+                        >
+                          <pattern.icon
+                            className={`w-5 h-5 text-${pattern.color}-600`}
+                          />
                         </div>
                         <div>
-                          <h3 className='text-xl font-semibold text-gray-900'>{pattern.title}</h3>
+                          <h3 className='text-xl font-semibold text-gray-900'>
+                            {pattern.title}
+                          </h3>
                           <p className='text-gray-600'>{pattern.description}</p>
                         </div>
                       </div>
-                      <span className={`px-2 py-1 bg-${pattern.color}-100 text-${pattern.color}-700 rounded text-xs font-medium`}>
+                      <span
+                        className={`px-2 py-1 bg-${pattern.color}-100 text-${pattern.color}-700 rounded text-xs font-medium`}
+                      >
                         {pattern.category}
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className='card-content'>
                     <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                       {pattern.examples.map((example, idx) => (
                         <div key={idx} className='space-y-3'>
-                          <h4 className='font-medium text-gray-900'>{example.name}</h4>
+                          <h4 className='font-medium text-gray-900'>
+                            {example.name}
+                          </h4>
                           <div className='bg-gray-900 rounded-lg overflow-hidden'>
                             <div className='px-4 py-2 bg-gray-800 text-gray-400 text-sm'>
                               {example.name}.tsx
@@ -429,7 +451,7 @@ function DynamicRoutes({ config }) {
               <Target className='w-6 h-6 mr-2 text-red-600' />
               常见反模式
             </h2>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
               {antiPatterns.map((antiPattern, index) => (
                 <motion.div
@@ -440,19 +462,27 @@ function DynamicRoutes({ config }) {
                   className='card border-l-4 border-l-red-500'
                 >
                   <div className='card-header'>
-                    <h3 className='text-lg font-semibold text-gray-900'>{antiPattern.title}</h3>
-                    <p className='text-gray-600 text-sm mt-1'>{antiPattern.description}</p>
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      {antiPattern.title}
+                    </h3>
+                    <p className='text-gray-600 text-sm mt-1'>
+                      {antiPattern.description}
+                    </p>
                   </div>
-                  
+
                   <div className='card-content space-y-3'>
                     <div>
-                      <h4 className='text-sm font-medium text-red-700 mb-1'>❌ 问题</h4>
+                      <h4 className='text-sm font-medium text-red-700 mb-1'>
+                        ❌ 问题
+                      </h4>
                       <p className='text-sm text-gray-600 bg-red-50 p-2 rounded'>
                         {antiPattern.problem}
                       </p>
                     </div>
                     <div>
-                      <h4 className='text-sm font-medium text-green-700 mb-1'>✅ 解决方案</h4>
+                      <h4 className='text-sm font-medium text-green-700 mb-1'>
+                        ✅ 解决方案
+                      </h4>
                       <p className='text-sm text-gray-600 bg-green-50 p-2 rounded'>
                         {antiPattern.solution}
                       </p>
@@ -475,7 +505,7 @@ function DynamicRoutes({ config }) {
               <CheckCircle className='w-6 h-6 mr-2 text-green-600' />
               设计检查清单
             </h2>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
               {checklist.map((section, index) => (
                 <motion.div
@@ -486,13 +516,18 @@ function DynamicRoutes({ config }) {
                   className='card'
                 >
                   <div className='card-header'>
-                    <h3 className='text-lg font-semibold text-gray-900'>{section.category}</h3>
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      {section.category}
+                    </h3>
                   </div>
-                  
+
                   <div className='card-content'>
                     <ul className='space-y-2'>
                       {section.items.map((item, idx) => (
-                        <li key={idx} className='flex items-center text-sm text-gray-600'>
+                        <li
+                          key={idx}
+                          className='flex items-center text-sm text-gray-600'
+                        >
                           <CheckCircle className='w-4 h-4 text-green-500 mr-2 flex-shrink-0' />
                           {item}
                         </li>
@@ -514,13 +549,17 @@ function DynamicRoutes({ config }) {
         >
           <div className='text-center mb-6'>
             <BookOpen className='w-12 h-12 text-indigo-600 mx-auto mb-4' />
-            <h3 className='text-2xl font-bold text-gray-900 mb-2'>应用设计模式</h3>
-            <p className='text-gray-600'>将这些模式应用到你的项目中，构建更好的路由架构</p>
+            <h3 className='text-2xl font-bold text-gray-900 mb-2'>
+              应用设计模式
+            </h3>
+            <p className='text-gray-600'>
+              将这些模式应用到你的项目中，构建更好的路由架构
+            </p>
           </div>
-          
+
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            <Link 
-              to='/examples/protected' 
+            <Link
+              to='/examples/protected'
               className='card hover:shadow-lg transition-all transform hover:scale-105'
             >
               <div className='card-content text-center'>
@@ -533,9 +572,9 @@ function DynamicRoutes({ config }) {
                 </div>
               </div>
             </Link>
-            
-            <Link 
-              to='/examples/lazy' 
+
+            <Link
+              to='/examples/lazy'
               className='card hover:shadow-lg transition-all transform hover:scale-105'
             >
               <div className='card-content text-center'>
@@ -548,9 +587,9 @@ function DynamicRoutes({ config }) {
                 </div>
               </div>
             </Link>
-            
-            <Link 
-              to='/examples/nested' 
+
+            <Link
+              to='/examples/nested'
               className='card hover:shadow-lg transition-all transform hover:scale-105'
             >
               <div className='card-content text-center'>
@@ -564,11 +603,11 @@ function DynamicRoutes({ config }) {
               </div>
             </Link>
           </div>
-          
+
           <div className='mt-6 text-center'>
-            <a 
-              href='https://patterns.dev/posts/client-side-routing' 
-              target='_blank' 
+            <a
+              href='https://patterns.dev/posts/client-side-routing'
+              target='_blank'
               rel='noopener noreferrer'
               className='inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium'
             >

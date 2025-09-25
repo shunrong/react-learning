@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Zap, 
-  Shield, 
-  Layers, 
-  Code, 
-  ArrowRight, 
+import {
+  Zap,
+  Shield,
+  Layers,
+  Code,
+  ArrowRight,
   CheckCircle,
   ExternalLink,
   Settings,
   Cpu,
   Globe,
-  Clock
+  Clock,
 } from 'lucide-react';
 
 function AdvancedRouting() {
@@ -22,7 +22,7 @@ function AdvancedRouting() {
       icon: Shield,
       color: 'red',
       examples: ['认证守卫', '角色权限', '动态权限', '路由拦截'],
-      link: '/examples/protected'
+      link: '/examples/protected',
     },
     {
       title: '懒加载路由',
@@ -30,7 +30,7 @@ function AdvancedRouting() {
       icon: Zap,
       color: 'green',
       examples: ['代码分割', '动态导入', '加载状态', '错误边界'],
-      link: '/examples/lazy'
+      link: '/examples/lazy',
     },
     {
       title: '模态路由',
@@ -38,7 +38,7 @@ function AdvancedRouting() {
       icon: Layers,
       color: 'indigo',
       examples: ['模态状态', 'URL 同步', '动画过渡', '嵌套模态'],
-      link: '/examples/modal'
+      link: '/examples/modal',
     },
     {
       title: '动态路由',
@@ -46,8 +46,8 @@ function AdvancedRouting() {
       icon: Settings,
       color: 'orange',
       examples: ['参数验证', '404 处理', '重定向', '查询参数'],
-      link: '/examples/dynamic'
-    }
+      link: '/examples/dynamic',
+    },
   ];
 
   const patterns = [
@@ -61,7 +61,7 @@ function AdvancedRouting() {
     if (!user) return <Navigate to="/login" />;
     return <Component {...props} />;
   };
-}`
+}`,
     },
     {
       title: '钩子模式',
@@ -76,7 +76,7 @@ function AdvancedRouting() {
   }, [user, navigate]);
   
   return user;
-}`
+}`,
     },
     {
       title: '组件模式',
@@ -90,8 +90,8 @@ function AdvancedRouting() {
   }
   
   return children;
-}`
-    }
+}`,
+    },
   ];
 
   const bestPractices = [
@@ -101,8 +101,8 @@ function AdvancedRouting() {
         '使用 React.lazy() 进行代码分割',
         '实现路由级别的预加载',
         '合理使用 React.memo 避免不必要的重渲染',
-        '监控路由切换性能指标'
-      ]
+        '监控路由切换性能指标',
+      ],
     },
     {
       category: '用户体验',
@@ -110,8 +110,8 @@ function AdvancedRouting() {
         '提供加载状态和错误边界',
         '实现平滑的页面过渡动画',
         '支持浏览器前进后退按钮',
-        '处理深层链接和书签'
-      ]
+        '处理深层链接和书签',
+      ],
     },
     {
       category: '安全性',
@@ -119,8 +119,8 @@ function AdvancedRouting() {
         '实现多层路由守卫机制',
         '避免在 URL 中暴露敏感信息',
         '验证所有路由参数',
-        '实现 CSRF 保护'
-      ]
+        '实现 CSRF 保护',
+      ],
     },
     {
       category: '可维护性',
@@ -128,32 +128,32 @@ function AdvancedRouting() {
         '保持路由结构清晰简洁',
         '使用语义化的路由命名',
         '集中管理路由配置',
-        '编写路由相关的单元测试'
-      ]
-    }
+        '编写路由相关的单元测试',
+      ],
+    },
   ];
 
   const roadmap = [
-    { 
-      phase: '基础阶段', 
+    {
+      phase: '基础阶段',
       topics: ['声明式导航', '程序化导航', '路由参数', '嵌套路由'],
-      status: 'completed'
+      status: 'completed',
     },
-    { 
-      phase: '进阶阶段', 
+    {
+      phase: '进阶阶段',
       topics: ['动态路由', '路由守卫', '懒加载', '错误处理'],
-      status: 'current'
+      status: 'current',
     },
-    { 
-      phase: '高级阶段', 
+    {
+      phase: '高级阶段',
       topics: ['模态路由', '路由动画', '性能优化', 'SSR 路由'],
-      status: 'upcoming'
+      status: 'upcoming',
     },
-    { 
-      phase: '专家阶段', 
+    {
+      phase: '专家阶段',
       topics: ['微前端路由', '路由测试', '国际化路由', '自定义路由'],
-      status: 'future'
-    }
+      status: 'future',
+    },
   ];
 
   return (
@@ -189,7 +189,7 @@ function AdvancedRouting() {
               <Cpu className='w-6 h-6 mr-2 text-purple-600' />
               核心特性
             </h2>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               {features.map((feature, index) => (
                 <motion.div
@@ -201,16 +201,24 @@ function AdvancedRouting() {
                 >
                   <div className='card-header'>
                     <div className='flex items-center'>
-                      <div className={`w-10 h-10 bg-${feature.color}-100 rounded-lg flex items-center justify-center mr-3`}>
-                        <feature.icon className={`w-5 h-5 text-${feature.color}-600`} />
+                      <div
+                        className={`w-10 h-10 bg-${feature.color}-100 rounded-lg flex items-center justify-center mr-3`}
+                      >
+                        <feature.icon
+                          className={`w-5 h-5 text-${feature.color}-600`}
+                        />
                       </div>
                       <div>
-                        <h3 className='text-lg font-semibold text-gray-900'>{feature.title}</h3>
-                        <p className='text-sm text-gray-600'>{feature.description}</p>
+                        <h3 className='text-lg font-semibold text-gray-900'>
+                          {feature.title}
+                        </h3>
+                        <p className='text-sm text-gray-600'>
+                          {feature.description}
+                        </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className='card-content'>
                     <div className='flex flex-wrap gap-2 mb-4'>
                       {feature.examples.map((example, idx) => (
@@ -222,7 +230,7 @@ function AdvancedRouting() {
                         </span>
                       ))}
                     </div>
-                    
+
                     <Link
                       to={feature.link}
                       className='inline-flex items-center text-sm font-medium text-purple-600 hover:text-purple-700'
@@ -248,7 +256,7 @@ function AdvancedRouting() {
               <Code className='w-6 h-6 mr-2 text-purple-600' />
               设计模式
             </h2>
-            
+
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
               {patterns.map((pattern, index) => (
                 <motion.div
@@ -261,11 +269,15 @@ function AdvancedRouting() {
                   <div className='card-header'>
                     <div className='flex items-center mb-3'>
                       <pattern.icon className='w-5 h-5 text-purple-600 mr-2' />
-                      <h3 className='text-lg font-semibold text-gray-900'>{pattern.title}</h3>
+                      <h3 className='text-lg font-semibold text-gray-900'>
+                        {pattern.title}
+                      </h3>
                     </div>
-                    <p className='text-sm text-gray-600'>{pattern.description}</p>
+                    <p className='text-sm text-gray-600'>
+                      {pattern.description}
+                    </p>
                   </div>
-                  
+
                   <div className='card-content'>
                     <div className='bg-gray-900 rounded-lg p-3'>
                       <pre className='text-xs text-gray-100 overflow-x-auto'>
@@ -290,7 +302,7 @@ function AdvancedRouting() {
               <CheckCircle className='w-6 h-6 mr-2 text-green-600' />
               最佳实践
             </h2>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               {bestPractices.map((category, index) => (
                 <motion.div
@@ -301,13 +313,18 @@ function AdvancedRouting() {
                   className='card'
                 >
                   <div className='card-header'>
-                    <h3 className='text-lg font-semibold text-gray-900'>{category.category}</h3>
+                    <h3 className='text-lg font-semibold text-gray-900'>
+                      {category.category}
+                    </h3>
                   </div>
-                  
+
                   <div className='card-content'>
                     <ul className='space-y-2'>
                       {category.tips.map((tip, idx) => (
-                        <li key={idx} className='flex items-start text-sm text-gray-600'>
+                        <li
+                          key={idx}
+                          className='flex items-start text-sm text-gray-600'
+                        >
                           <CheckCircle className='w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0' />
                           {tip}
                         </li>
@@ -331,7 +348,7 @@ function AdvancedRouting() {
               <Globe className='w-6 h-6 mr-2 text-purple-600' />
               学习路径
             </h2>
-            
+
             <div className='space-y-6'>
               {roadmap.map((phase, index) => (
                 <motion.div
@@ -341,26 +358,44 @@ function AdvancedRouting() {
                   transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
                   className={`relative pl-8 pb-8 ${index < roadmap.length - 1 ? 'border-l-2 border-gray-200' : ''}`}
                 >
-                  <div className={`absolute left-0 top-0 w-4 h-4 rounded-full -translate-x-2 ${
-                    phase.status === 'completed' ? 'bg-green-500' :
-                    phase.status === 'current' ? 'bg-purple-500' :
-                    phase.status === 'upcoming' ? 'bg-yellow-500' : 'bg-gray-300'
-                  }`}></div>
-                  
+                  <div
+                    className={`absolute left-0 top-0 w-4 h-4 rounded-full -translate-x-2 ${
+                      phase.status === 'completed'
+                        ? 'bg-green-500'
+                        : phase.status === 'current'
+                          ? 'bg-purple-500'
+                          : phase.status === 'upcoming'
+                            ? 'bg-yellow-500'
+                            : 'bg-gray-300'
+                    }`}
+                  ></div>
+
                   <div className='bg-white rounded-lg p-6 shadow-sm border border-gray-200'>
                     <div className='flex items-center justify-between mb-3'>
-                      <h3 className='text-lg font-semibold text-gray-900'>{phase.phase}</h3>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        phase.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        phase.status === 'current' ? 'bg-purple-100 text-purple-800' :
-                        phase.status === 'upcoming' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {phase.status === 'completed' ? '已完成' :
-                         phase.status === 'current' ? '进行中' :
-                         phase.status === 'upcoming' ? '即将开始' : '规划中'}
+                      <h3 className='text-lg font-semibold text-gray-900'>
+                        {phase.phase}
+                      </h3>
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${
+                          phase.status === 'completed'
+                            ? 'bg-green-100 text-green-800'
+                            : phase.status === 'current'
+                              ? 'bg-purple-100 text-purple-800'
+                              : phase.status === 'upcoming'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {phase.status === 'completed'
+                          ? '已完成'
+                          : phase.status === 'current'
+                            ? '进行中'
+                            : phase.status === 'upcoming'
+                              ? '即将开始'
+                              : '规划中'}
                       </span>
                     </div>
-                    
+
                     <div className='flex flex-wrap gap-2'>
                       {phase.topics.map((topic, idx) => (
                         <span
@@ -387,13 +422,17 @@ function AdvancedRouting() {
         >
           <div className='text-center mb-6'>
             <Clock className='w-12 h-12 text-purple-600 mx-auto mb-4' />
-            <h3 className='text-2xl font-bold text-gray-900 mb-2'>开始高级路由之旅</h3>
-            <p className='text-gray-600'>通过系统化的学习和实践，掌握现代 React 路由开发</p>
+            <h3 className='text-2xl font-bold text-gray-900 mb-2'>
+              开始高级路由之旅
+            </h3>
+            <p className='text-gray-600'>
+              通过系统化的学习和实践，掌握现代 React 路由开发
+            </p>
           </div>
-          
+
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            <Link 
-              to='/examples/protected' 
+            <Link
+              to='/examples/protected'
               className='card hover:shadow-lg transition-all transform hover:scale-105'
             >
               <div className='card-content text-center'>
@@ -406,9 +445,9 @@ function AdvancedRouting() {
                 </div>
               </div>
             </Link>
-            
-            <Link 
-              to='/examples/lazy' 
+
+            <Link
+              to='/examples/lazy'
               className='card hover:shadow-lg transition-all transform hover:scale-105'
             >
               <div className='card-content text-center'>
@@ -421,9 +460,9 @@ function AdvancedRouting() {
                 </div>
               </div>
             </Link>
-            
-            <Link 
-              to='/examples/modal' 
+
+            <Link
+              to='/examples/modal'
               className='card hover:shadow-lg transition-all transform hover:scale-105'
             >
               <div className='card-content text-center'>
@@ -437,11 +476,11 @@ function AdvancedRouting() {
               </div>
             </Link>
           </div>
-          
+
           <div className='mt-6 text-center'>
-            <a 
-              href='https://reactrouter.com/en/main/guides/overview' 
-              target='_blank' 
+            <a
+              href='https://reactrouter.com/en/main/guides/overview'
+              target='_blank'
               rel='noopener noreferrer'
               className='inline-flex items-center text-purple-600 hover:text-purple-700 font-medium'
             >

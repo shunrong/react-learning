@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  BarChart3, 
-  CheckCircle, 
-  XCircle, 
+import {
+  BarChart3,
+  CheckCircle,
+  XCircle,
   ExternalLink,
   Star,
   Download,
@@ -38,7 +38,7 @@ interface RouterLibrary {
 
 function Comparison() {
   const [selectedMetric, setSelectedMetric] = useState('popularity');
-  
+
   const routers: RouterLibrary[] = [
     {
       name: 'React Router',
@@ -57,19 +57,19 @@ function Comparison() {
         '支持嵌套路由和代码分割',
         '丰富的生态系统和插件',
         '优秀的 TypeScript 支持',
-        '支持 SSR 和静态生成'
+        '支持 SSR 和静态生成',
       ],
       cons: [
         '学习曲线相对陡峭',
         '包体积相对较大',
         'v5 到 v6 迁移成本较高',
-        '某些高级功能配置复杂'
+        '某些高级功能配置复杂',
       ],
       useCases: [
         '大型复杂的单页应用',
         '需要复杂嵌套路由的应用',
         '企业级应用开发',
-        '需要 SSR 支持的项目'
+        '需要 SSR 支持的项目',
       ],
       codeExample: `import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
@@ -93,7 +93,7 @@ function App() {
       popularity: 95,
       performance: 85,
       ecosystem: 95,
-      learningCurve: 70
+      learningCurve: 70,
     },
     {
       name: 'Next.js Router',
@@ -112,19 +112,19 @@ function App() {
         '内置 SSR 和 SSG 支持',
         '优秀的开发体验',
         'App Router 提供更强大功能',
-        'API 路由集成'
+        'API 路由集成',
       ],
       cons: [
         '只能在 Next.js 项目中使用',
         '文件结构即路由，灵活性受限',
         'App Router 学习成本较高',
-        '某些自定义需求难以实现'
+        '某些自定义需求难以实现',
       ],
       useCases: [
         'Next.js 全栈应用',
         '需要 SSR/SSG 的项目',
         '静态网站生成',
-        'JAMstack 应用'
+        'JAMstack 应用',
       ],
       codeExample: `// pages/index.js
 export default function Home() {
@@ -149,7 +149,7 @@ export default function UserPage({ params }) {
       popularity: 90,
       performance: 95,
       ecosystem: 85,
-      learningCurve: 85
+      learningCurve: 85,
     },
     {
       name: 'Reach Router',
@@ -166,19 +166,15 @@ export default function UserPage({ params }) {
         '卓越的可访问性支持',
         '简洁直观的 API',
         '轻量级实现',
-        '优秀的焦点管理'
+        '优秀的焦点管理',
       ],
       cons: [
         '已停止维护，合并到 React Router',
         '功能相对有限',
         '生态系统较小',
-        '不推荐新项目使用'
+        '不推荐新项目使用',
       ],
-      useCases: [
-        '历史项目维护',
-        '学习路由概念',
-        '简单的单页应用'
-      ],
+      useCases: ['历史项目维护', '学习路由概念', '简单的单页应用'],
       codeExample: `import { Router, Link } from '@reach/router';
 
 function App() {
@@ -201,7 +197,7 @@ function App() {
       popularity: 20,
       performance: 90,
       ecosystem: 30,
-      learningCurve: 95
+      learningCurve: 95,
     },
     {
       name: 'Wouter',
@@ -220,19 +216,19 @@ function App() {
         '支持 TypeScript',
         '零依赖',
         '支持 Hook 模式',
-        '性能优异'
+        '性能优异',
       ],
       cons: [
         '功能相对基础',
         '生态系统有限',
         '不支持复杂的嵌套路由',
-        '社区相对较小'
+        '社区相对较小',
       ],
       useCases: [
         '小型项目和原型',
         '对包体积敏感的项目',
         '简单的 SPA 应用',
-        '嵌入式组件路由'
+        '嵌入式组件路由',
       ],
       codeExample: `import { Router, Route, Link } from 'wouter';
 
@@ -258,25 +254,67 @@ function App() {
       popularity: 60,
       performance: 95,
       ecosystem: 40,
-      learningCurve: 90
-    }
+      learningCurve: 90,
+    },
   ];
 
   const metrics = [
     { key: 'popularity', label: '受欢迎程度', icon: Star, color: 'yellow' },
     { key: 'performance', label: '性能表现', icon: Zap, color: 'green' },
     { key: 'ecosystem', label: '生态系统', icon: Globe, color: 'blue' },
-    { key: 'learningCurve', label: '易学程度', icon: Code, color: 'purple' }
+    { key: 'learningCurve', label: '易学程度', icon: Code, color: 'purple' },
   ];
 
   const comparisonMatrix = [
-    { feature: '包体积', reactRouter: '12.8kB', nextjs: '内置', reach: '7.2kB', wouter: '1.5kB' },
-    { feature: 'TypeScript 支持', reactRouter: '✅ 优秀', nextjs: '✅ 优秀', reach: '✅ 良好', wouter: '✅ 良好' },
-    { feature: '嵌套路由', reactRouter: '✅ 强大', nextjs: '✅ 文件系统', reach: '✅ 基础', wouter: '❌ 不支持' },
-    { feature: '代码分割', reactRouter: '✅ 支持', nextjs: '✅ 自动', reach: '✅ 手动', wouter: '❌ 需自实现' },
-    { feature: 'SSR 支持', reactRouter: '✅ 支持', nextjs: '✅ 内置', reach: '✅ 支持', wouter: '✅ 基础' },
-    { feature: '学习成本', reactRouter: '中等', nextjs: '中等', reach: '低', wouter: '低' },
-    { feature: '维护状态', reactRouter: '✅ 活跃', nextjs: '✅ 活跃', reach: '❌ 停止', wouter: '✅ 活跃' }
+    {
+      feature: '包体积',
+      reactRouter: '12.8kB',
+      nextjs: '内置',
+      reach: '7.2kB',
+      wouter: '1.5kB',
+    },
+    {
+      feature: 'TypeScript 支持',
+      reactRouter: '✅ 优秀',
+      nextjs: '✅ 优秀',
+      reach: '✅ 良好',
+      wouter: '✅ 良好',
+    },
+    {
+      feature: '嵌套路由',
+      reactRouter: '✅ 强大',
+      nextjs: '✅ 文件系统',
+      reach: '✅ 基础',
+      wouter: '❌ 不支持',
+    },
+    {
+      feature: '代码分割',
+      reactRouter: '✅ 支持',
+      nextjs: '✅ 自动',
+      reach: '✅ 手动',
+      wouter: '❌ 需自实现',
+    },
+    {
+      feature: 'SSR 支持',
+      reactRouter: '✅ 支持',
+      nextjs: '✅ 内置',
+      reach: '✅ 支持',
+      wouter: '✅ 基础',
+    },
+    {
+      feature: '学习成本',
+      reactRouter: '中等',
+      nextjs: '中等',
+      reach: '低',
+      wouter: '低',
+    },
+    {
+      feature: '维护状态',
+      reactRouter: '✅ 活跃',
+      nextjs: '✅ 活跃',
+      reach: '❌ 停止',
+      wouter: '✅ 活跃',
+    },
   ];
 
   const getMetricColor = (value: number) => {
@@ -317,7 +355,7 @@ function App() {
           >
             <h2 className='text-2xl font-bold text-gray-900 mb-6'>评估维度</h2>
             <div className='flex flex-wrap gap-4 mb-8'>
-              {metrics.map((metric) => (
+              {metrics.map(metric => (
                 <button
                   key={metric.key}
                   onClick={() => setSelectedMetric(metric.key)}
@@ -332,7 +370,7 @@ function App() {
                 </button>
               ))}
             </div>
-            
+
             {/* 指标对比图 */}
             <div className='bg-white rounded-lg p-6 shadow-sm border border-gray-200'>
               <h3 className='text-lg font-semibold text-gray-900 mb-4'>
@@ -355,7 +393,9 @@ function App() {
                       <div className='bg-gray-200 rounded-full h-3'>
                         <div
                           className={`h-3 rounded-full transition-all duration-1000 ${getMetricColor(router[selectedMetric as keyof RouterLibrary] as number)}`}
-                          style={{ width: `${router[selectedMetric as keyof RouterLibrary]}%` }}
+                          style={{
+                            width: `${router[selectedMetric as keyof RouterLibrary]}%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -377,7 +417,7 @@ function App() {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <h2 className='text-2xl font-bold text-gray-900 mb-8'>详细对比</h2>
-            
+
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
               {routers.map((router, index) => (
                 <motion.div
@@ -392,12 +432,16 @@ function App() {
                       <div className='flex items-center'>
                         <span className='text-2xl mr-3'>{router.logo}</span>
                         <div>
-                          <h3 className='text-xl font-semibold text-gray-900'>{router.name}</h3>
-                          <p className='text-gray-600 text-sm'>{router.description}</p>
+                          <h3 className='text-xl font-semibold text-gray-900'>
+                            {router.name}
+                          </h3>
+                          <p className='text-gray-600 text-sm'>
+                            {router.description}
+                          </p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className='grid grid-cols-2 gap-4 text-sm'>
                       <div className='flex items-center'>
                         <Star className='w-4 h-4 text-yellow-500 mr-1' />
@@ -417,10 +461,12 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className='card-content space-y-4'>
                     <div>
-                      <h4 className='font-medium text-green-700 mb-2'>✅ 优势</h4>
+                      <h4 className='font-medium text-green-700 mb-2'>
+                        ✅ 优势
+                      </h4>
                       <ul className='text-sm text-gray-600 space-y-1'>
                         {router.pros.slice(0, 3).map((pro, idx) => (
                           <li key={idx} className='flex items-start'>
@@ -430,7 +476,7 @@ function App() {
                         ))}
                       </ul>
                     </div>
-                    
+
                     <div>
                       <h4 className='font-medium text-red-700 mb-2'>❌ 劣势</h4>
                       <ul className='text-sm text-gray-600 space-y-1'>
@@ -442,7 +488,7 @@ function App() {
                         ))}
                       </ul>
                     </div>
-                    
+
                     <div className='pt-4 border-t border-gray-200'>
                       <a
                         href={router.documentation}
@@ -468,8 +514,10 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <h2 className='text-2xl font-bold text-gray-900 mb-8'>功能对比表</h2>
-            
+            <h2 className='text-2xl font-bold text-gray-900 mb-8'>
+              功能对比表
+            </h2>
+
             <div className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden'>
               <div className='overflow-x-auto'>
                 <table className='w-full'>
@@ -494,7 +542,10 @@ function App() {
                   </thead>
                   <tbody className='bg-white divide-y divide-gray-200'>
                     {comparisonMatrix.map((row, index) => (
-                      <tr key={row.feature} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr
+                        key={row.feature}
+                        className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                      >
                         <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                           {row.feature}
                         </td>
@@ -529,17 +580,23 @@ function App() {
           <div className='text-center mb-8'>
             <Layers className='w-12 h-12 text-blue-600 mx-auto mb-4' />
             <h3 className='text-2xl font-bold text-gray-900 mb-2'>选择建议</h3>
-            <p className='text-gray-600'>根据项目需求选择最适合的路由解决方案</p>
+            <p className='text-gray-600'>
+              根据项目需求选择最适合的路由解决方案
+            </p>
           </div>
-          
+
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
             <div className='bg-white rounded-lg p-6 border border-gray-200'>
               <div className='text-center mb-4'>
                 <span className='text-3xl'>🔀</span>
-                <h4 className='font-semibold text-gray-900 mt-2'>React Router</h4>
+                <h4 className='font-semibold text-gray-900 mt-2'>
+                  React Router
+                </h4>
               </div>
               <div className='text-sm text-gray-600 space-y-2'>
-                <p><strong>适用于:</strong></p>
+                <p>
+                  <strong>适用于:</strong>
+                </p>
                 <ul className='list-disc list-inside space-y-1'>
                   <li>大型复杂应用</li>
                   <li>需要丰富功能</li>
@@ -548,14 +605,18 @@ function App() {
                 </ul>
               </div>
             </div>
-            
+
             <div className='bg-white rounded-lg p-6 border border-gray-200'>
               <div className='text-center mb-4'>
                 <span className='text-3xl'>▲</span>
-                <h4 className='font-semibold text-gray-900 mt-2'>Next.js Router</h4>
+                <h4 className='font-semibold text-gray-900 mt-2'>
+                  Next.js Router
+                </h4>
               </div>
               <div className='text-sm text-gray-600 space-y-2'>
-                <p><strong>适用于:</strong></p>
+                <p>
+                  <strong>适用于:</strong>
+                </p>
                 <ul className='list-disc list-inside space-y-1'>
                   <li>Next.js 项目</li>
                   <li>需要 SSR/SSG</li>
@@ -564,14 +625,18 @@ function App() {
                 </ul>
               </div>
             </div>
-            
+
             <div className='bg-white rounded-lg p-6 border border-gray-200 opacity-60'>
               <div className='text-center mb-4'>
                 <span className='text-3xl'>🏃‍♂️</span>
-                <h4 className='font-semibold text-gray-900 mt-2'>Reach Router</h4>
+                <h4 className='font-semibold text-gray-900 mt-2'>
+                  Reach Router
+                </h4>
               </div>
               <div className='text-sm text-gray-600 space-y-2'>
-                <p><strong>不推荐:</strong></p>
+                <p>
+                  <strong>不推荐:</strong>
+                </p>
                 <ul className='list-disc list-inside space-y-1'>
                   <li>已停止维护</li>
                   <li>合并到 React Router</li>
@@ -579,14 +644,16 @@ function App() {
                 </ul>
               </div>
             </div>
-            
+
             <div className='bg-white rounded-lg p-6 border border-gray-200'>
               <div className='text-center mb-4'>
                 <span className='text-3xl'>🪶</span>
                 <h4 className='font-semibold text-gray-900 mt-2'>Wouter</h4>
               </div>
               <div className='text-sm text-gray-600 space-y-2'>
-                <p><strong>适用于:</strong></p>
+                <p>
+                  <strong>适用于:</strong>
+                </p>
                 <ul className='list-disc list-inside space-y-1'>
                   <li>小型项目</li>
                   <li>原型开发</li>
@@ -596,7 +663,7 @@ function App() {
               </div>
             </div>
           </div>
-          
+
           <div className='mt-8 text-center'>
             <div className='inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium'>
               💡 建议：90% 的项目选择 React Router 或 Next.js Router
