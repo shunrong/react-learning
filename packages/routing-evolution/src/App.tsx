@@ -20,31 +20,31 @@ import ModalRoutingExample from '@/examples/ModalRoutingExample';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className='min-h-screen bg-gray-50'>
       <Layout>
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode='wait'>
           <Routes>
             {/* 主要页面 */}
-            <Route path="/" element={<Home />} />
-            <Route path="/evolution" element={<RouterEvolution />} />
-            <Route path="/basic" element={<BasicRouting />} />
-            <Route path="/advanced" element={<AdvancedRouting />} />
-            <Route path="/patterns" element={<RoutePatterns />} />
-            <Route path="/performance" element={<PerformanceDemo />} />
-            <Route path="/comparison" element={<Comparison />} />
-            
+            <Route path='/' element={<Home />} />
+            <Route path='/evolution' element={<RouterEvolution />} />
+            <Route path='/basic' element={<BasicRouting />} />
+            <Route path='/advanced' element={<AdvancedRouting />} />
+            <Route path='/patterns' element={<RoutePatterns />} />
+            <Route path='/performance' element={<PerformanceDemo />} />
+            <Route path='/comparison' element={<Comparison />} />
+
             {/* 路由示例 */}
-            <Route path="/examples">
-              <Route path="basic" element={<BasicExample />} />
-              <Route path="nested" element={<NestedRoutingExample />} />
-              <Route path="dynamic" element={<DynamicRoutingExample />} />
-              <Route path="protected" element={<ProtectedRoutingExample />} />
-              <Route path="lazy" element={<LazyRoutingExample />} />
-              <Route path="modal" element={<ModalRoutingExample />} />
+            <Route path='/examples'>
+              <Route path='basic' element={<BasicExample />} />
+              <Route path='nested' element={<NestedRoutingExample />} />
+              <Route path='dynamic' element={<DynamicRoutingExample />} />
+              <Route path='protected' element={<ProtectedRoutingExample />} />
+              <Route path='lazy' element={<LazyRoutingExample />} />
+              <Route path='modal' element={<ModalRoutingExample />} />
             </Route>
-            
+
             {/* 404 页面 */}
-            <Route path="*" element={<NotFound />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </AnimatePresence>
       </Layout>

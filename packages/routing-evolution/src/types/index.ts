@@ -167,25 +167,25 @@ export interface AppRoute {
 export type * from './index';
 
 // 常量类型
-export const ROUTE_VERSIONS = [
-  'v3', 'v4', 'v5', 'v6', 'v7'
-] as const;
+export const ROUTE_VERSIONS = ['v3', 'v4', 'v5', 'v6', 'v7'] as const;
 
-export type RouteVersionType = typeof ROUTE_VERSIONS[number];
+export type RouteVersionType = (typeof ROUTE_VERSIONS)[number];
 
 export const DIFFICULTY_LEVELS = [
-  'beginner', 'intermediate', 'advanced'
+  'beginner',
+  'intermediate',
+  'advanced',
 ] as const;
 
-export type DifficultyLevel = typeof DIFFICULTY_LEVELS[number];
+export type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 
 export const ROUTE_PATTERNS = [
   'basic-routing',
-  'nested-routing', 
+  'nested-routing',
   'dynamic-routing',
   'protected-routing',
   'lazy-routing',
-  'modal-routing'
+  'modal-routing',
 ] as const;
 
-export type RoutePatternType = typeof ROUTE_PATTERNS[number];
+export type RoutePatternType = (typeof ROUTE_PATTERNS)[number];
