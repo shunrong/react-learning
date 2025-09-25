@@ -1,0 +1,31 @@
+{
+  "name": "react-15-demo",
+  "version": "1.0.0",
+  "description": "React 15 栈协调器演示项目 - 展示同步渲染的特点和性能瓶颈",
+  "scripts": {
+    "dev": "lsof -ti:3015 | xargs kill -9 2>/dev/null || true && webpack serve --mode development",
+    "dev:auto": "webpack serve --mode development --port auto",
+    "build": "webpack --mode production",
+    "preview": "serve dist",
+    "clean": "rm -rf dist node_modules"
+  },
+  "dependencies": {
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "prop-types": "^15.8.1",
+    "classnames": "^2.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "@babel/preset-react": "^7.22.0",
+    "babel-loader": "^9.1.0",
+    "css-loader": "^6.8.0",
+    "html-webpack-plugin": "^5.5.0",
+    "serve": "^14.2.0",
+    "style-loader": "^3.3.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^4.15.0"
+  }
+}

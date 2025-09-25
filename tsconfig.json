@@ -1,0 +1,71 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "baseUrl": ".",
+    "paths": {
+      "@react-15/*": ["packages/react-15-demo/src/*"],
+      "@react-16/*": ["packages/react-16-fiber/src/*"],
+      "@hooks/*": ["packages/hooks-playground/src/*"],
+      "@state/*": ["packages/state-management/src/*"],
+      "@routing/*": ["packages/routing-evolution/src/*"],
+      "@styling/*": ["packages/styling-solutions/src/*"],
+      "@components/*": ["packages/component-library/src/*"],
+      "@build/*": ["packages/build-tools-demo/src/*"],
+      "@ts-react/*": ["packages/typescript-react/src/*"],
+      "@performance/*": ["packages/performance-opt/src/*"],
+      "@source/*": ["packages/react18-source/src/*"],
+      "@ssr/*": ["packages/ssr-solutions/src/*"],
+      "@testing/*": ["packages/testing-strategies/src/*"],
+      "@data/*": ["packages/data-fetching/src/*"],
+      "@micro/*": ["packages/micro-frontends/src/*"],
+      "@future/*": ["packages/react-future/src/*"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*",
+    "packages/*/types/**/*",
+    "global.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/node_modules/**"
+  ],
+  "references": [
+    { "path": "./packages/react-15-demo" },
+    { "path": "./packages/react-16-fiber" },
+    { "path": "./packages/hooks-playground" },
+    { "path": "./packages/state-management" },
+    { "path": "./packages/routing-evolution" },
+    { "path": "./packages/styling-solutions" },
+    { "path": "./packages/component-library" },
+    { "path": "./packages/build-tools-demo" },
+    { "path": "./packages/typescript-react" },
+    { "path": "./packages/performance-opt" },
+    { "path": "./packages/react18-source" },
+    { "path": "./packages/ssr-solutions" },
+    { "path": "./packages/testing-strategies" },
+    { "path": "./packages/data-fetching" },
+    { "path": "./packages/micro-frontends" },
+    { "path": "./packages/react-future" }
+  ]
+}

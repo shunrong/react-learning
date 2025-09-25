@@ -1,0 +1,54 @@
+{
+  "name": "react-learning-monorepo",
+  "version": "1.0.0",
+  "description": "React 生态全面复习与实践项目",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write .",
+    "type-check": "pnpm -r type-check",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
+    "docs:serve": "pnpm --filter docs serve",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.0",
+    "concurrently": "^8.0.0"
+  },
+  "keywords": [
+    "react",
+    "frontend",
+    "monorepo",
+    "learning",
+    "tutorial",
+    "source-code",
+    "hooks",
+    "fiber",
+    "performance"
+  ],
+  "author": "lime",
+  "license": "MIT",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
+  }
+}

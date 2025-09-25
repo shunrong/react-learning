@@ -1,0 +1,223 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* 自定义基础样式 */
+@layer base {
+  :root {
+    --color-primary: #0ea5e9;
+    --color-primary-dark: #0284c7;
+    --color-secondary: #64748b;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    
+    /* 背景色 */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-dark: #0f172a;
+    --bg-dark-secondary: #1e293b;
+    
+    /* 文字颜色 */
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-dark-primary: #f1f5f9;
+    --text-dark-secondary: #cbd5e1;
+    
+    /* 边框颜色 */
+    --border-light: #e2e8f0;
+    --border-dark: #334155;
+    
+    /* 阴影 */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  }
+  
+  /* 暗色模式 */
+  .dark {
+    --bg-primary: var(--bg-dark);
+    --bg-secondary: var(--bg-dark-secondary);
+    --text-primary: var(--text-dark-primary);
+    --text-secondary: var(--text-dark-secondary);
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    @apply bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-200;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* 滚动条样式 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100 dark:bg-slate-800;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-slate-500;
+  }
+}
+
+/* 自定义组件样式 */
+@layer components {
+  /* 代码块样式 */
+  .code-block {
+    @apply bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 font-mono text-sm overflow-x-auto;
+  }
+  
+  /* 卡片样式 */
+  .card {
+    @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+  
+  /* 按钮基础样式 */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply btn bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200 dark:border-slate-600;
+  }
+  
+  .btn-success {
+    @apply btn bg-green-600 hover:bg-green-700 text-white focus:ring-green-500;
+  }
+  
+  .btn-warning {
+    @apply btn bg-yellow-600 hover:bg-yellow-700 text-white focus:ring-yellow-500;
+  }
+  
+  .btn-danger {
+    @apply btn bg-red-600 hover:bg-red-700 text-white focus:ring-red-500;
+  }
+  
+  /* 输入框样式 */
+  .input {
+    @apply block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm placeholder-slate-400 dark:placeholder-slate-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+  }
+  
+  /* 标签样式 */
+  .label {
+    @apply block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1;
+  }
+  
+  /* 导航链接样式 */
+  .nav-link {
+    @apply px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200;
+  }
+  
+  .nav-link-active {
+    @apply nav-link bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200;
+  }
+  
+  .nav-link-inactive {
+    @apply nav-link text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800;
+  }
+  
+  /* Hook 示例容器 */
+  .hook-example {
+    @apply card p-6 space-y-4;
+  }
+  
+  .hook-title {
+    @apply text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2;
+  }
+  
+  .hook-description {
+    @apply text-slate-600 dark:text-slate-400 text-sm mb-4;
+  }
+  
+  .hook-demo {
+    @apply border border-slate-200 dark:border-slate-700 rounded-lg p-4 bg-slate-50 dark:bg-slate-800/50;
+  }
+  
+  .hook-code {
+    @apply mt-4;
+  }
+  
+  /* 状态显示 */
+  .state-display {
+    @apply bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-blue-800 dark:text-blue-200 font-mono text-sm;
+  }
+  
+  /* 错误提示 */
+  .error-message {
+    @apply bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-red-800 dark:text-red-200 text-sm;
+  }
+  
+  /* 成功提示 */
+  .success-message {
+    @apply bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-green-800 dark:text-green-200 text-sm;
+  }
+  
+  /* 信息提示 */
+  .info-message {
+    @apply bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-blue-800 dark:text-blue-200 text-sm;
+  }
+  
+  /* 加载动画 */
+  .loading-spinner {
+    @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin;
+  }
+  
+  /* 语法高亮 */
+  .syntax-highlight {
+    @apply text-sm font-mono;
+  }
+  
+  .syntax-keyword {
+    @apply text-purple-600 dark:text-purple-400;
+  }
+  
+  .syntax-string {
+    @apply text-green-600 dark:text-green-400;
+  }
+  
+  .syntax-number {
+    @apply text-blue-600 dark:text-blue-400;
+  }
+  
+  .syntax-comment {
+    @apply text-slate-500 dark:text-slate-400 italic;
+  }
+}
+
+/* 工具类 */
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+  
+  .border-gradient {
+    @apply border-0 bg-gradient-to-r from-blue-600 to-purple-600 p-px rounded-lg;
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 20px rgb(59 130 246 / 0.3);
+  }
+  
+  .backdrop-blur-custom {
+    backdrop-filter: blur(8px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .dark .backdrop-blur-custom {
+    background-color: rgba(15, 23, 42, 0.8);
+  }
+}

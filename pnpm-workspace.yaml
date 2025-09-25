@@ -1,0 +1,30 @@
+packages:
+  - 'packages/*'
+  - 'docs'
+  - 'website'
+
+# 共享依赖配置
+shared:
+  # React 生态核心依赖
+  react: "^18.2.0"
+  react-dom: "^18.2.0"
+  
+  # 开发工具
+  typescript: "^5.0.0"
+  "@types/react": "^18.2.0"
+  "@types/react-dom": "^18.2.0"
+  
+  # 构建工具
+  vite: "^5.0.0"
+  
+  # 代码质量
+  eslint: "^8.50.0"
+  prettier: "^3.0.0"
+
+# 依赖提升配置
+hoist-pattern:
+  - "*eslint*"
+  - "*prettier*"
+  - "*typescript*"
+  - "react"
+  - "react-dom"

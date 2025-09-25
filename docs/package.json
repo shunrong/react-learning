@@ -1,0 +1,21 @@
+{
+  "name": "react-learning-docs",
+  "version": "1.0.0",
+  "description": "React 生态学习文档站点",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "serve": "vitepress serve",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0",
+    "vue": "^3.3.0",
+    "@types/node": "^20.0.0"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.0.0",
+    "medium-zoom": "^1.1.0"
+  }
+}
