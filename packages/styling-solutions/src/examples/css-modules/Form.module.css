@@ -1,0 +1,205 @@
+/* CSS Modules 表单组件样式 */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 表单组 */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.required::after {
+  content: ' *';
+  color: #ef4444;
+}
+
+/* 输入框基础样式 */
+.input {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.input:disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* 输入框状态 */
+.inputError {
+  border-color: #ef4444;
+}
+
+.inputError:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.inputSuccess {
+  border-color: #10b981;
+}
+
+.inputSuccess:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* 文本域 */
+.textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+/* 选择框 */
+.select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5rem 1.5rem;
+  padding-right: 2.5rem;
+}
+
+/* 复选框和单选按钮容器 */
+.checkboxGroup,
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkboxItem,
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox,
+.radio {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+.checkboxLabel,
+.radioLabel {
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* 帮助文本 */
+.helpText {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* 错误信息 */
+.errorText {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.errorIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* 成功信息 */
+.successText {
+  font-size: 0.75rem;
+  color: #10b981;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.successIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* 表单操作按钮 */
+.formActions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.formActions button {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .formActions {
+    flex-direction: column;
+  }
+  
+  .formActions button {
+    width: 100%;
+  }
+}
+
+/* 内联表单 */
+.inlineForm {
+  flex-direction: row;
+  align-items: end;
+  gap: 1rem;
+}
+
+.inlineForm .formGroup {
+  flex: 1;
+}
+
+.inlineForm .formActions {
+  border: none;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* 表单验证动画 */
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}

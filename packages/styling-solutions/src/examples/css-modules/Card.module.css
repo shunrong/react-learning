@@ -1,0 +1,153 @@
+/* CSS Modules 卡片组件样式 */
+.card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
+}
+
+/* 卡片头部 */
+.header {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* 卡片内容 */
+.content {
+  padding: 1.5rem;
+}
+
+.content p {
+  margin: 0 0 1rem;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.content p:last-child {
+  margin-bottom: 0;
+}
+
+/* 卡片底部 */
+.footer {
+  padding: 1rem 1.5rem;
+  background: #f9fafb;
+  border-top: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 卡片变体 */
+.elevated {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.elevated:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.outlined {
+  border: 2px solid #e5e7eb;
+  box-shadow: none;
+}
+
+.outlined:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filled {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border: none;
+}
+
+/* 状态样式 */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+  .header,
+  .content,
+  .footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .header {
+    padding-top: 1rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .content {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .footer {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
