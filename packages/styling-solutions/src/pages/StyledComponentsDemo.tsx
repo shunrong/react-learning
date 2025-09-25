@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import {
   Save,
-  Download,
   Trash2,
   Edit3,
   Heart,
@@ -25,8 +24,16 @@ const lightTheme = {
     background: '#ffffff',
     surface: '#f8fafc',
     text: '#374151',
+    textSecondary: '#6b7280',
     textLight: '#6b7280',
     border: '#e5e7eb',
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
   },
   shadows: {
     sm: '0 1px 3px rgba(0, 0, 0, 0.1)',
@@ -944,7 +951,7 @@ export default function StyledComponentsDemo() {
                     value={formData.email}
                     onChange={e => handleInputChange('email', e.target.value)}
                     placeholder='your@email.com'
-                    hasError={formData.email && !formData.email.includes('@')}
+                    hasError={formData.email ? !formData.email.includes('@') : false}
                   />
                   {formData.email && !formData.email.includes('@') && (
                     <ErrorText>请输入有效的邮箱地址</ErrorText>

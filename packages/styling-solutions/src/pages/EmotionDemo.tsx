@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { css, keyframes, ThemeProvider } from '@emotion/react';
@@ -962,23 +963,37 @@ const AnimatedBox = styled.div\`
               >
                 💡 Emotion 是现代 React 应用中 CSS-in-JS 的优秀选择
               </span>
-              <Button
-                theme={currentTheme}
-                variant='primary'
-                size='small'
-                as='a'
-                href='https://emotion.sh/docs/introduction'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                查看文档
-                <ArrowRight
+                <a
+                  href='https://emotion.sh/docs/introduction'
+                  target='_blank'
+                  rel='noopener noreferrer'
                   css={css`
-                    width: 16px;
-                    height: 16px;
+                    display: inline-flex;
+                    align-items: center;
+                    padding: ${currentTheme.spacing.small}px ${currentTheme.spacing.medium}px;
+                    background: ${currentTheme.colors.primary};
+                    color: white;
+                    text-decoration: none;
+                    border-radius: ${currentTheme.borderRadius}px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    
+                    &:hover {
+                      background: ${currentTheme.colors.primary}dd;
+                      transform: translateY(-1px);
+                    }
                   `}
-                />
-              </Button>
+                >
+                  查看文档
+                  <ArrowRight
+                    css={css`
+                      width: 16px;
+                      height: 16px;
+                      margin-left: 4px;
+                    `}
+                  />
+                </a>
             </div>
           </Card>
         </Container>
