@@ -1,31 +1,66 @@
 import { useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  Link,
+} from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  User, 
-  Package, 
-  Search, 
-  AlertCircle, 
-  ArrowLeft
-} from 'lucide-react';
+import { User, Package, Search, AlertCircle, ArrowLeft } from 'lucide-react';
 
 // 模拟数据库
 const mockDatabase = {
   users: {
-    'alice': { id: 'alice', name: 'Alice Johnson', role: 'Admin', joinDate: '2023-01-15', posts: 42 },
-    'bob': { id: 'bob', name: 'Bob Smith', role: 'Developer', joinDate: '2023-03-20', posts: 28 },
-    'carol': { id: 'carol', name: 'Carol Williams', role: 'Designer', joinDate: '2023-05-10', posts: 35 }
+    alice: {
+      id: 'alice',
+      name: 'Alice Johnson',
+      role: 'Admin',
+      joinDate: '2023-01-15',
+      posts: 42,
+    },
+    bob: {
+      id: 'bob',
+      name: 'Bob Smith',
+      role: 'Developer',
+      joinDate: '2023-03-20',
+      posts: 28,
+    },
+    carol: {
+      id: 'carol',
+      name: 'Carol Williams',
+      role: 'Designer',
+      joinDate: '2023-05-10',
+      posts: 35,
+    },
   },
   products: {
-    'laptop-001': { id: 'laptop-001', name: 'MacBook Pro M3', category: 'laptop', price: 12999, stock: 15 },
-    'phone-002': { id: 'phone-002', name: 'iPhone 15 Pro', category: 'phone', price: 7999, stock: 8 },
-    'tablet-003': { id: 'tablet-003', name: 'iPad Air', category: 'tablet', price: 4599, stock: 20 }
+    'laptop-001': {
+      id: 'laptop-001',
+      name: 'MacBook Pro M3',
+      category: 'laptop',
+      price: 12999,
+      stock: 15,
+    },
+    'phone-002': {
+      id: 'phone-002',
+      name: 'iPhone 15 Pro',
+      category: 'phone',
+      price: 7999,
+      stock: 8,
+    },
+    'tablet-003': {
+      id: 'tablet-003',
+      name: 'iPad Air',
+      category: 'tablet',
+      price: 4599,
+      stock: 20,
+    },
   },
   categories: {
-    'laptop': { name: '笔记本电脑', description: '高性能移动工作站' },
-    'phone': { name: '智能手机', description: '便携通讯设备' },
-    'tablet': { name: '平板电脑', description: '轻薄便携平板' }
-  }
+    laptop: { name: '笔记本电脑', description: '高性能移动工作站' },
+    phone: { name: '智能手机', description: '便携通讯设备' },
+    tablet: { name: '平板电脑', description: '轻薄便携平板' },
+  },
 };
 
 // 用户详情组件
@@ -33,10 +68,12 @@ function UserDetail() {
   const { userId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  
-  const user = userId ? mockDatabase.users[userId as keyof typeof mockDatabase.users] : null;
+
+  const user = userId
+    ? mockDatabase.users[userId as keyof typeof mockDatabase.users]
+    : null;
   const tab = searchParams.get('tab') || 'profile';
-  
+
   useEffect(() => {
     if (userId && !user) {
       const timer = setTimeout(() => {
@@ -45,7 +82,7 @@ function UserDetail() {
       return () => clearTimeout(timer);
     }
   }, [userId, user, navigate]);
-  
+
   if (userId && !user) {
     return (
       <div className='text-center py-8'>
@@ -54,7 +91,7 @@ function UserDetail() {
       </div>
     );
   }
-  
+
   if (!user) {
     return (
       <div className='text-center py-8'>
@@ -68,7 +105,7 @@ function UserDetail() {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -79,7 +116,10 @@ function UserDetail() {
       <div className='flex items-center justify-between mb-6'>
         <div className='flex items-center space-x-4'>
           <div className='w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold'>
-            {user.name.split(' ').map(n => n[0]).join('')}
+            {user.name
+              .split(' ')
+              .map(n => n[0])
+              .join('')}
           </div>
           <div>
             <h1 className='text-2xl font-bold text-gray-900'>{user.name}</h1>
@@ -87,20 +127,20 @@ function UserDetail() {
             <p className='text-sm text-gray-500'>用户ID: {user.id}</p>
           </div>
         </div>
-        
+
         <Link to='/examples/dynamic' className='btn btn-outline'>
           <ArrowLeft className='w-4 h-4 mr-2' />
           返回
         </Link>
       </div>
-      
+
       {/* 标签导航 */}
       <div className='border-b border-gray-200 mb-6'>
         <nav className='flex space-x-8'>
           {[
             { id: 'profile', label: '个人资料', icon: User },
             { id: 'posts', label: '发布内容', icon: Package },
-            { id: 'settings', label: '设置', icon: Search }
+            { id: 'settings', label: '设置', icon: Search },
           ].map(tabItem => (
             <Link
               key={tabItem.id}
@@ -117,7 +157,7 @@ function UserDetail() {
           ))}
         </nav>
       </div>
-      
+
       {/* 标签内容 */}
       <div className='space-y-4'>
         {tab === 'profile' && (
@@ -132,14 +172,14 @@ function UserDetail() {
             </div>
           </div>
         )}
-        
+
         {tab === 'posts' && (
           <div className='text-center py-8'>
             <Package className='w-12 h-12 text-gray-400 mx-auto mb-4' />
             <p className='text-gray-600'>用户共发布了 {user.posts} 篇内容</p>
           </div>
         )}
-        
+
         {tab === 'settings' && (
           <div className='text-center py-8'>
             <Search className='w-12 h-12 text-gray-400 mx-auto mb-4' />
@@ -155,16 +195,22 @@ function UserDetail() {
 function ProductDetail() {
   const { productId, categoryId } = useParams();
   const navigate = useNavigate();
-  
-  const product = productId ? mockDatabase.products[productId as keyof typeof mockDatabase.products] : null;
-  const category = categoryId ? mockDatabase.categories[categoryId as keyof typeof mockDatabase.categories] : null;
-  
+
+  const product = productId
+    ? mockDatabase.products[productId as keyof typeof mockDatabase.products]
+    : null;
+  const category = categoryId
+    ? mockDatabase.categories[
+        categoryId as keyof typeof mockDatabase.categories
+      ]
+    : null;
+
   useEffect(() => {
     if (product && categoryId && product.category !== categoryId) {
       navigate('/examples/dynamic/category/mismatch', { replace: true });
     }
   }, [product, categoryId, navigate]);
-  
+
   if (!product) {
     return (
       <div className='text-center py-8'>
@@ -177,7 +223,7 @@ function ProductDetail() {
       </div>
     );
   }
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -198,13 +244,13 @@ function ProductDetail() {
           <h1 className='text-2xl font-bold text-gray-900'>{product.name}</h1>
           <p className='text-gray-600'>¥{product.price.toLocaleString()}</p>
         </div>
-        
+
         <Link to='/examples/dynamic' className='btn btn-outline'>
           <ArrowLeft className='w-4 h-4 mr-2' />
           返回
         </Link>
       </div>
-      
+
       <div className='grid grid-cols-3 gap-4'>
         <div className='bg-green-50 rounded-lg p-4'>
           <h3 className='font-medium text-green-900 mb-2'>库存状态</h3>
@@ -230,12 +276,18 @@ export default function DynamicRoutingExample() {
       <div className='text-center'>
         <h1 className='text-3xl font-bold text-gray-900 mb-4'>动态路由示例</h1>
         <p className='text-gray-600 mb-8'>点击下面的链接体验动态路由</p>
-        
+
         <div className='space-y-4'>
-          <Link to='/examples/dynamic/user/alice?tab=profile' className='btn btn-primary mr-4'>
+          <Link
+            to='/examples/dynamic/user/alice?tab=profile'
+            className='btn btn-primary mr-4'
+          >
             查看用户 Alice
           </Link>
-          <Link to='/examples/dynamic/category/laptop/product/laptop-001' className='btn btn-secondary'>
+          <Link
+            to='/examples/dynamic/category/laptop/product/laptop-001'
+            className='btn btn-secondary'
+          >
             查看笔记本产品
           </Link>
         </div>

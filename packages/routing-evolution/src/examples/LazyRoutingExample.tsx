@@ -1,120 +1,134 @@
 import { useState, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Zap, 
-  Clock, 
-  Download, 
-  Code, 
+import {
+  Zap,
+  Clock,
+  Download,
+  Code,
   Activity,
   ArrowRight,
   CheckCircle,
   Layers,
   Globe,
   Cpu,
-  BarChart3
+  BarChart3,
 } from 'lucide-react';
 
 // 懒加载组件示例
-const HeavyDashboard = lazy(() => 
-  new Promise<{ default: React.ComponentType }>(resolve => {
-    setTimeout(() => {
-      resolve({
-        default: () => (
-          <div className='bg-white rounded-lg p-6'>
-            <h2 className='text-xl font-semibold text-gray-900 mb-4'>仪表盘模块</h2>
-            <p className='text-gray-600'>这是一个模拟的重型仪表盘组件</p>
-          </div>
-        )
-      });
-    }, 1000);
-  })
-);
-
-const DataVisualization = lazy(() => 
-  new Promise<{ default: React.ComponentType }>(resolve => {
-    setTimeout(() => {
-      resolve({
-        default: () => (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className='bg-white rounded-lg p-6'
-          >
-            <h2 className='text-xl font-semibold text-gray-900 mb-4 flex items-center'>
-              <BarChart3 className='w-5 h-5 mr-2 text-blue-600' />
-              数据可视化模块
-            </h2>
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='bg-blue-50 rounded-lg p-4'>
-                <h3 className='font-medium text-blue-900 mb-2'>图表组件</h3>
-                <div className='w-full h-20 bg-blue-200 rounded flex items-center justify-center'>
-                  📊 模拟图表
-                </div>
-              </div>
-              <div className='bg-green-50 rounded-lg p-4'>
-                <h3 className='font-medium text-green-900 mb-2'>数据表格</h3>
-                <div className='w-full h-20 bg-green-200 rounded flex items-center justify-center'>
-                  📋 模拟表格
-                </div>
-              </div>
+const HeavyDashboard = lazy(
+  () =>
+    new Promise<{ default: React.ComponentType }>(resolve => {
+      setTimeout(() => {
+        resolve({
+          default: () => (
+            <div className='bg-white rounded-lg p-6'>
+              <h2 className='text-xl font-semibold text-gray-900 mb-4'>
+                仪表盘模块
+              </h2>
+              <p className='text-gray-600'>这是一个模拟的重型仪表盘组件</p>
             </div>
-            <p className='text-gray-600 mt-4'>
-              这个组件模拟了一个复杂的数据可视化模块，包含了大量的图表库和数据处理逻辑。
-              通过懒加载，只有在用户真正需要时才会下载和执行。
-            </p>
-          </motion.div>
-        )
-      });
-    }, 2000); // 模拟2秒加载时间
-  })
+          ),
+        });
+      }, 1000);
+    })
 );
 
-const UserManagement = lazy(() => 
-  new Promise<{ default: React.ComponentType }>(resolve => {
-    setTimeout(() => {
-      resolve({
-        default: () => (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className='bg-white rounded-lg p-6'
-          >
-            <h2 className='text-xl font-semibold text-gray-900 mb-4 flex items-center'>
-              <Layers className='w-5 h-5 mr-2 text-purple-600' />
-              用户管理系统
-            </h2>
-            <div className='space-y-4'>
-              {[
-                { name: 'Alice Johnson', role: 'Admin', status: 'active' },
-                { name: 'Bob Smith', role: 'User', status: 'active' },
-                { name: 'Carol Williams', role: 'Editor', status: 'inactive' }
-              ].map((user, index) => (
-                <div key={index} className='flex items-center justify-between p-3 border border-gray-200 rounded-lg'>
-                  <div>
-                    <h3 className='font-medium text-gray-900'>{user.name}</h3>
-                    <p className='text-sm text-gray-600'>{user.role}</p>
+const DataVisualization = lazy(
+  () =>
+    new Promise<{ default: React.ComponentType }>(resolve => {
+      setTimeout(() => {
+        resolve({
+          default: () => (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className='bg-white rounded-lg p-6'
+            >
+              <h2 className='text-xl font-semibold text-gray-900 mb-4 flex items-center'>
+                <BarChart3 className='w-5 h-5 mr-2 text-blue-600' />
+                数据可视化模块
+              </h2>
+              <div className='grid grid-cols-2 gap-4'>
+                <div className='bg-blue-50 rounded-lg p-4'>
+                  <h3 className='font-medium text-blue-900 mb-2'>图表组件</h3>
+                  <div className='w-full h-20 bg-blue-200 rounded flex items-center justify-center'>
+                    📊 模拟图表
                   </div>
-                  <span className={`px-2 py-1 rounded text-xs ${
-                    user.status === 'active' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {user.status}
-                  </span>
                 </div>
-              ))}
-            </div>
-            <p className='text-gray-600 mt-4'>
-              用户管理模块包含复杂的权限控制、批量操作等功能，是一个相对独立的大型模块。
-            </p>
-          </motion.div>
-        )
-      });
-    }, 1500);
-  })
+                <div className='bg-green-50 rounded-lg p-4'>
+                  <h3 className='font-medium text-green-900 mb-2'>数据表格</h3>
+                  <div className='w-full h-20 bg-green-200 rounded flex items-center justify-center'>
+                    📋 模拟表格
+                  </div>
+                </div>
+              </div>
+              <p className='text-gray-600 mt-4'>
+                这个组件模拟了一个复杂的数据可视化模块，包含了大量的图表库和数据处理逻辑。
+                通过懒加载，只有在用户真正需要时才会下载和执行。
+              </p>
+            </motion.div>
+          ),
+        });
+      }, 2000); // 模拟2秒加载时间
+    })
+);
+
+const UserManagement = lazy(
+  () =>
+    new Promise<{ default: React.ComponentType }>(resolve => {
+      setTimeout(() => {
+        resolve({
+          default: () => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className='bg-white rounded-lg p-6'
+            >
+              <h2 className='text-xl font-semibold text-gray-900 mb-4 flex items-center'>
+                <Layers className='w-5 h-5 mr-2 text-purple-600' />
+                用户管理系统
+              </h2>
+              <div className='space-y-4'>
+                {[
+                  { name: 'Alice Johnson', role: 'Admin', status: 'active' },
+                  { name: 'Bob Smith', role: 'User', status: 'active' },
+                  {
+                    name: 'Carol Williams',
+                    role: 'Editor',
+                    status: 'inactive',
+                  },
+                ].map((user, index) => (
+                  <div
+                    key={index}
+                    className='flex items-center justify-between p-3 border border-gray-200 rounded-lg'
+                  >
+                    <div>
+                      <h3 className='font-medium text-gray-900'>{user.name}</h3>
+                      <p className='text-sm text-gray-600'>{user.role}</p>
+                    </div>
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        user.status === 'active'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {user.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className='text-gray-600 mt-4'>
+                用户管理模块包含复杂的权限控制、批量操作等功能，是一个相对独立的大型模块。
+              </p>
+            </motion.div>
+          ),
+        });
+      }, 1500);
+    })
 );
 
 // 加载指示器组件
@@ -138,9 +152,7 @@ function LoadingSpinner({ message = '正在加载...' }: { message?: string }) {
 // 错误边界组件
 function LazyErrorBoundary({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense 
-      fallback={<LoadingSpinner message='加载组件中，请稍候...' />}
-    >
+    <Suspense fallback={<LoadingSpinner message='加载组件中，请稍候...' />}>
       {children}
     </Suspense>
   );
@@ -151,33 +163,36 @@ function LazyRoutingExample() {
   const [loadingStats, setLoadingStats] = useState({
     dashboard: { loaded: false, loadTime: 0 },
     visualization: { loaded: false, loadTime: 0 },
-    management: { loaded: false, loadTime: 0 }
+    management: { loaded: false, loadTime: 0 },
   });
 
   const handleDemoLoad = (demo: string) => {
     if (activeDemo === demo) return;
-    
+
     setActiveDemo(demo);
     const startTime = Date.now();
-    
+
     // 模拟记录加载时间
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       setLoadingStats(prev => ({
         ...prev,
-        [demo]: { loaded: false, loadTime: elapsed }
+        [demo]: { loaded: false, loadTime: elapsed },
       }));
     }, 100);
 
     // 模拟加载完成
-    setTimeout(() => {
-      clearInterval(interval);
-      const totalTime = Date.now() - startTime;
-      setLoadingStats(prev => ({
-        ...prev,
-        [demo]: { loaded: true, loadTime: totalTime }
-      }));
-    }, demo === 'visualization' ? 2000 : demo === 'management' ? 1500 : 1000);
+    setTimeout(
+      () => {
+        clearInterval(interval);
+        const totalTime = Date.now() - startTime;
+        setLoadingStats(prev => ({
+          ...prev,
+          [demo]: { loaded: true, loadTime: totalTime },
+        }));
+      },
+      demo === 'visualization' ? 2000 : demo === 'management' ? 1500 : 1000
+    );
   };
 
   const codeExamples = {
@@ -328,7 +343,7 @@ const loadFeature = async (featureName: string) => {
     console.error(\`Failed to load \${featureName}\`, error);
     return null;
   }
-};`
+};`,
   };
 
   const [activeTab, setActiveTab] = useState('basic');
@@ -336,7 +351,7 @@ const loadFeature = async (featureName: string) => {
     { id: 'basic', label: '基础用法', icon: Code },
     { id: 'advanced', label: '高级配置', icon: Zap },
     { id: 'optimization', label: '性能优化', icon: Activity },
-    { id: 'bundle', label: '包分析', icon: Globe }
+    { id: 'bundle', label: '包分析', icon: Globe },
   ];
 
   const features = [
@@ -344,20 +359,20 @@ const loadFeature = async (featureName: string) => {
       title: '代码分割',
       description: '按需加载，减少初始包大小',
       icon: Layers,
-      benefits: ['首屏加载更快', '带宽使用更少', '缓存策略更灵活']
+      benefits: ['首屏加载更快', '带宽使用更少', '缓存策略更灵活'],
     },
     {
       title: '用户体验',
       description: '渐进式加载，优雅的等待状态',
       icon: Clock,
-      benefits: ['平滑的加载动画', '智能预加载', '错误状态处理']
+      benefits: ['平滑的加载动画', '智能预加载', '错误状态处理'],
     },
     {
       title: '性能监控',
       description: '实时监控加载性能和成功率',
       icon: Activity,
-      benefits: ['加载时间统计', '失败率监控', '用户行为分析']
-    }
+      benefits: ['加载时间统计', '失败率监控', '用户行为分析'],
+    },
   ];
 
   return (
@@ -375,11 +390,13 @@ const loadFeature = async (featureName: string) => {
                 <Zap className='w-6 h-6 text-green-600' />
               </div>
               <div>
-                <h1 className='text-3xl font-bold text-gray-900'>懒加载路由示例</h1>
+                <h1 className='text-3xl font-bold text-gray-900'>
+                  懒加载路由示例
+                </h1>
                 <p className='text-gray-600 mt-1'>按需加载提升应用性能</p>
               </div>
             </div>
-            
+
             <div className='bg-green-50 border border-green-200 rounded-lg p-4'>
               <div className='flex items-center text-sm text-green-800'>
                 <Download className='w-4 h-4 mr-2' />
@@ -403,10 +420,14 @@ const loadFeature = async (featureName: string) => {
             {/* 懒加载演示 */}
             <div className='card'>
               <div className='card-header'>
-                <h2 className='text-xl font-semibold text-gray-900'>🚀 懒加载演示</h2>
-                <p className='text-sm text-gray-600 mt-1'>点击按钮体验动态加载</p>
+                <h2 className='text-xl font-semibold text-gray-900'>
+                  🚀 懒加载演示
+                </h2>
+                <p className='text-sm text-gray-600 mt-1'>
+                  点击按钮体验动态加载
+                </p>
               </div>
-              
+
               <div className='card-content space-y-4'>
                 <div className='grid grid-cols-1 gap-3'>
                   <button
@@ -429,9 +450,11 @@ const loadFeature = async (featureName: string) => {
                         </span>
                       )}
                     </div>
-                    <p className='text-sm text-gray-600 mt-1'>复杂的数据看板组件</p>
+                    <p className='text-sm text-gray-600 mt-1'>
+                      复杂的数据看板组件
+                    </p>
                   </button>
-                  
+
                   <button
                     onClick={() => handleDemoLoad('visualization')}
                     className={`p-4 rounded-lg border-2 transition-all text-left ${
@@ -452,9 +475,11 @@ const loadFeature = async (featureName: string) => {
                         </span>
                       )}
                     </div>
-                    <p className='text-sm text-gray-600 mt-1'>大型图表库和数据处理 (2s 加载)</p>
+                    <p className='text-sm text-gray-600 mt-1'>
+                      大型图表库和数据处理 (2s 加载)
+                    </p>
                   </button>
-                  
+
                   <button
                     onClick={() => handleDemoLoad('management')}
                     className={`p-4 rounded-lg border-2 transition-all text-left ${
@@ -475,10 +500,12 @@ const loadFeature = async (featureName: string) => {
                         </span>
                       )}
                     </div>
-                    <p className='text-sm text-gray-600 mt-1'>用户权限和管理功能 (1.5s 加载)</p>
+                    <p className='text-sm text-gray-600 mt-1'>
+                      用户权限和管理功能 (1.5s 加载)
+                    </p>
                   </button>
                 </div>
-                
+
                 {activeDemo && (
                   <div className='mt-6 border-t pt-4'>
                     <LazyErrorBoundary>
@@ -494,12 +521,17 @@ const loadFeature = async (featureName: string) => {
             {/* 性能统计 */}
             <div className='card'>
               <div className='card-header'>
-                <h3 className='text-lg font-semibold text-gray-900'>📊 加载性能</h3>
+                <h3 className='text-lg font-semibold text-gray-900'>
+                  📊 加载性能
+                </h3>
               </div>
               <div className='card-content'>
                 <div className='space-y-3'>
                   {Object.entries(loadingStats).map(([key, stats]) => (
-                    <div key={key} className='flex items-center justify-between p-3 bg-gray-50 rounded-lg'>
+                    <div
+                      key={key}
+                      className='flex items-center justify-between p-3 bg-gray-50 rounded-lg'
+                    >
                       <span className='font-medium capitalize'>{key}</span>
                       <div className='flex items-center'>
                         {stats.loaded ? (
@@ -531,13 +563,15 @@ const loadFeature = async (featureName: string) => {
           >
             <div className='card h-full'>
               <div className='card-header'>
-                <h2 className='text-xl font-semibold text-gray-900'>📝 代码实现</h2>
+                <h2 className='text-xl font-semibold text-gray-900'>
+                  📝 代码实现
+                </h2>
               </div>
-              
+
               <div className='card-content'>
                 {/* 标签切换 */}
                 <div className='flex flex-wrap gap-2 mb-4'>
-                  {tabs.map((tab) => (
+                  {tabs.map(tab => (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
@@ -552,7 +586,7 @@ const loadFeature = async (featureName: string) => {
                     </button>
                   ))}
                 </div>
-                
+
                 {/* 代码显示 */}
                 <div className='bg-gray-900 rounded-lg overflow-hidden'>
                   <div className='flex items-center justify-between px-4 py-2 bg-gray-800'>
@@ -566,7 +600,9 @@ const loadFeature = async (featureName: string) => {
                     </span>
                   </div>
                   <pre className='p-4 text-sm text-gray-100 overflow-x-auto leading-relaxed max-h-96'>
-                    <code>{codeExamples[activeTab as keyof typeof codeExamples]}</code>
+                    <code>
+                      {codeExamples[activeTab as keyof typeof codeExamples]}
+                    </code>
                   </pre>
                 </div>
               </div>
@@ -585,7 +621,7 @@ const loadFeature = async (featureName: string) => {
             <h3 className='text-xl font-semibold text-gray-900 mb-6'>
               ⚡ 懒加载的核心优势
             </h3>
-            
+
             <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
               {features.map((feature, index) => (
                 <motion.div
@@ -600,13 +636,20 @@ const loadFeature = async (featureName: string) => {
                       <feature.icon className='w-5 h-5 text-green-600' />
                     </div>
                     <div>
-                      <h4 className='font-semibold text-gray-900'>{feature.title}</h4>
-                      <p className='text-sm text-gray-600'>{feature.description}</p>
+                      <h4 className='font-semibold text-gray-900'>
+                        {feature.title}
+                      </h4>
+                      <p className='text-sm text-gray-600'>
+                        {feature.description}
+                      </p>
                     </div>
                   </div>
                   <ul className='space-y-1'>
                     {feature.benefits.map((benefit, idx) => (
-                      <li key={idx} className='text-sm text-gray-600 flex items-center'>
+                      <li
+                        key={idx}
+                        className='text-sm text-gray-600 flex items-center'
+                      >
                         <CheckCircle className='w-3 h-3 text-green-500 mr-2' />
                         {benefit}
                       </li>
@@ -615,14 +658,14 @@ const loadFeature = async (featureName: string) => {
                 </motion.div>
               ))}
             </div>
-            
+
             <div className='mt-6 pt-4 border-t border-gray-200'>
               <div className='flex items-center justify-between'>
                 <div className='text-sm text-gray-600'>
                   🎯 合理使用懒加载可显著提升大型应用的用户体验
                 </div>
-                <Link 
-                  to='/examples/protected' 
+                <Link
+                  to='/examples/protected'
                   className='btn btn-primary text-sm flex items-center'
                 >
                   下一步：路由守卫
