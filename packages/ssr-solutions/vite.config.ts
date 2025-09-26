@@ -7,15 +7,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3009,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
-  }
+    sourcemap: true,
+  },
 });
