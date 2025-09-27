@@ -9,8 +9,9 @@
     "pnpm": ">=8.0.0"
   },
   "scripts": {
-    "build": "pnpm -r build",
-    "build:all": "pnpm docs:build && pnpm --filter hooks-playground build && pnpm --filter state-management-comparison build && pnpm --filter routing-evolution build && pnpm --filter styling-solutions build && pnpm --filter performance-optimization build && pnpm --filter ssr-solutions build",
+    "build": "pnpm build:vercel",
+    "build:all": "pnpm docs:build && pnpm --filter hooks-playground build && pnpm --filter state-solution build && pnpm --filter routing-solution build && pnpm --filter styling-solution build && pnpm --filter perf-solution build && pnpm --filter ssr-solution build",
+    "build:vercel": "pnpm build:all && node scripts/merge-dist.cjs",
     "dev": "pnpm -r dev",
     "dev:all": "concurrently \"pnpm docs:dev\" \"pnpm hooks:dev\" \"pnpm state:dev\" \"pnpm routing:dev\" \"pnpm styling:dev\" \"pnpm perf:dev\" \"pnpm ssr:dev\"",
     "test": "pnpm -r test",
@@ -21,11 +22,11 @@
     "docs:build": "pnpm --filter react-learning-docs build",
     "docs:serve": "pnpm --filter react-learning-docs serve",
     "hooks:dev": "pnpm --filter hooks-playground dev",
-    "state:dev": "pnpm --filter state-management-comparison dev",
-    "routing:dev": "pnpm --filter routing-evolution dev",
-    "styling:dev": "pnpm --filter styling-solutions dev",
-    "perf:dev": "pnpm --filter performance-optimization dev",
-    "ssr:dev": "pnpm --filter ssr-solutions dev",
+    "state:dev": "pnpm --filter state-solution dev",
+    "routing:dev": "pnpm --filter routing-solution dev",
+    "styling:dev": "pnpm --filter styling-solution dev",
+    "perf:dev": "pnpm --filter perf-solution dev",
+    "ssr:dev": "pnpm --filter ssr-solution dev",
     "clean": "pnpm -r clean && rm -rf node_modules",
     "prepare": "husky install"
   },

@@ -2,83 +2,41 @@
   "version": 2,
   "builds": [
     {
-      "src": "docs/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "docs/.vitepress/dist"
-      }
-    },
-    {
-      "src": "packages/hooks-playground/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "packages/hooks-playground/dist"
-      }
-    },
-    {
-      "src": "packages/state-solution/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "packages/state-solution/dist"
-      }
-    },
-    {
-      "src": "packages/routing-solution/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "packages/routing-solution/dist"
-      }
-    },
-    {
-      "src": "packages/styling-solution/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "packages/styling-solution/dist"
-      }
-    },
-    {
-      "src": "packages/perf-solution/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "packages/perf-solution/dist"
-      }
-    },
-    {
-      "src": "packages/ssr-solution/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "packages/ssr-solution/dist"
+        "distDir": "dist"
       }
     }
   ],
   "routes": [
     {
       "src": "/hooks-playground/(.*)",
-      "dest": "/packages/hooks-playground/$1"
+      "dest": "/hooks-playground/$1"
     },
     {
       "src": "/state-management/(.*)",
-      "dest": "/packages/state-solution/$1"
+      "dest": "/state-management/$1"
     },
     {
       "src": "/routing-system/(.*)",
-      "dest": "/packages/routing-solution/$1"
+      "dest": "/routing-system/$1"
     },
     {
       "src": "/styling-solutions/(.*)",
-      "dest": "/packages/styling-solution/$1"
+      "dest": "/styling-solutions/$1"
     },
     {
       "src": "/performance/(.*)",
-      "dest": "/packages/perf-solution/$1"
+      "dest": "/performance/$1"
     },
     {
       "src": "/ssr-solutions/(.*)",
-      "dest": "/packages/ssr-solution/$1"
+      "dest": "/ssr-solutions/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/docs/.vitepress/dist/$1"
+      "dest": "/$1"
     }
   ]
 }
