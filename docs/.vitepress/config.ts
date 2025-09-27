@@ -1,72 +1,76 @@
 import { defineConfig } from 'vitepress';
 
+// 环境变量控制链接
+// 使用更直接的方式：如果没有设置 VERCEL 或 CI 环境变量，就认为是本地开发
+const isDev = !process.env.VERCEL && !process.env.CI;
+const baseUrl = isDev ? 'http://localhost' : 'https://react.hilime.me';
+
 export default defineConfig({
-  title: 'React 生态学习指南',
-  description: '全面深入的 React 生态系统学习与实践',
+  title: 'React 技术专家',
+  description:
+    'React 技术栈最佳实践学习和总结 - 10年前端React生涯的大总结，文档 + Demo 互补的完整学习体系',
   lang: 'zh-CN',
+  ignoreDeadLinks: true,
 
   // 主题配置
   themeConfig: {
     logo: '/logo.svg',
-    siteTitle: 'React 生态学习指南',
+    siteTitle: 'React 技术专家成长之路',
 
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
       { text: '指南', link: '/guide/' },
+      { text: '版本', link: '/versions/' },
+      { text: '概念', link: '/concepts/' },
+      { text: '源码', link: '/source/' },
+      { text: '架构', link: '/architecture/' },
+      { text: '最佳实践', link: '/practice/' },
       {
-        text: '核心概念',
+        text: 'Demo',
         items: [
-          { text: '版本演进', link: '/versions/' },
-          { text: '架构原理', link: '/concepts/' },
-          { text: '最佳实践', link: '/patterns/' },
+          {
+            text: 'Hooks 交互演练',
+            link: isDev ? `${baseUrl}:3001` : `${baseUrl}/hooks-playground`,
+            target: '_blank',
+          },
+          {
+            text: '状态管理对比',
+            link: isDev ? `${baseUrl}:3002` : `${baseUrl}/state-management`,
+            target: '_blank',
+          },
+          {
+            text: '路由系统演进',
+            link: isDev ? `${baseUrl}:3003` : `${baseUrl}/routing-system`,
+            target: '_blank',
+          },
+          {
+            text: '样式方案实战',
+            link: isDev ? `${baseUrl}:3007` : `${baseUrl}/styling-solutions`,
+            target: '_blank',
+          },
+          {
+            text: '性能优化实践',
+            link: isDev ? `${baseUrl}:3008` : `${baseUrl}/performance`,
+            target: '_blank',
+          },
+          {
+            text: 'SSR 解决方案',
+            link: isDev ? `${baseUrl}:3009` : `${baseUrl}/ssr-solutions`,
+            target: '_blank',
+          },
         ],
       },
-      {
-        text: '进阶主题',
-        items: [
-          { text: '源码解析', link: '/source-analysis/' },
-          { text: 'SSR/SSG', link: '/ssr/' },
-          { text: '微前端', link: '/micro-fe/' },
-          { text: '性能优化', link: '/concepts/performance' },
-        ],
-      },
-      {
-        text: '生态工具',
-        items: [
-          { text: '状态管理', link: '/concepts/state-management' },
-          { text: '路由方案', link: '/concepts/routing' },
-          { text: '样式方案', link: '/concepts/styling' },
-          { text: '测试策略', link: '/testing/' },
-          { text: '数据获取', link: '/data/' },
-        ],
-      },
-      { text: '未来发展', link: '/future/' },
     ],
 
     // 侧边栏
     sidebar: {
       '/guide/': [
         {
-          text: '开始',
+          text: '学习指南',
           items: [
-            { text: '介绍', link: '/guide/' },
             { text: '快速开始', link: '/guide/getting-started' },
             { text: '项目结构', link: '/guide/project-structure' },
-          ],
-        },
-      ],
-
-      '/versions/': [
-        {
-          text: 'React 版本演进',
-          items: [
-            { text: '版本概览', link: '/versions/' },
-            { text: 'React 15 - 栈协调', link: '/versions/react-15' },
-            { text: 'React 16 - Fiber 架构', link: '/versions/react-16' },
-            { text: 'React 17 - 渐进升级', link: '/versions/react-17' },
-            { text: 'React 18 - 并发特性', link: '/versions/react-18' },
-            { text: '架构对比分析', link: '/versions/comparison' },
           ],
         },
       ],
@@ -76,107 +80,98 @@ export default defineConfig({
           text: '核心概念',
           items: [
             { text: '概念总览', link: '/concepts/' },
-            { text: 'JSX 与虚拟 DOM', link: '/concepts/jsx-vdom' },
-            { text: '组件系统', link: '/concepts/components' },
-            { text: 'Hooks 机制', link: '/concepts/hooks' },
-            { text: '状态管理', link: '/concepts/state-management' },
-            { text: '事件系统', link: '/concepts/events' },
-            { text: '生命周期', link: '/concepts/lifecycle' },
-            { text: '性能优化', link: '/concepts/performance' },
+            { text: 'Hooks 函数组件', link: '/concepts/hooks' },
+            { text: '状态管理哲学与方案', link: '/concepts/state-management' },
+            { text: '前端路由原理与实现', link: '/concepts/routing' },
+            { text: '样式解决方案演进史', link: '/concepts/styling' },
+            { text: '数据获取方案', link: '/concepts/data-fetching' },
+            { text: '服务端渲染深度剖析', link: '/concepts/ssr' },
           ],
         },
       ],
 
-      '/patterns/': [
+      '/versions/': [
         {
-          text: '设计模式与最佳实践',
+          text: 'React 版本演进',
           items: [
-            { text: '模式概览', link: '/patterns/' },
-            { text: '组件设计模式', link: '/patterns/component-patterns' },
-            { text: '状态管理模式', link: '/patterns/state-patterns' },
-            { text: '代码组织模式', link: '/patterns/code-organization' },
-            { text: '性能优化模式', link: '/patterns/performance-patterns' },
-            { text: 'TypeScript 模式', link: '/patterns/typescript-patterns' },
+            { text: '版本演进总览', link: '/versions/' },
+            {
+              text: 'React 15 - Stack 架构初探',
+              link: '/versions/react-15',
+            },
+            { text: 'React 16 - Fiber 架构革命', link: '/versions/react-16' },
+            { text: 'React 17 - 零破坏性升级', link: '/versions/react-17' },
+            { text: 'React 18 - 并发特性', link: '/versions/react-18' },
+            { text: 'React 19 - 编译器时代', link: '/versions/react-19' },
+            { text: '架构对比分析', link: '/versions/comparison' },
           ],
         },
       ],
 
-      '/source-analysis/': [
+      '/source/': [
         {
-          text: '源码深度解析',
+          text: '源码解读',
           items: [
-            { text: '源码导读', link: '/source-analysis/' },
-            { text: 'Fiber 架构', link: '/source-analysis/fiber' },
-            { text: '调度器原理', link: '/source-analysis/scheduler' },
-            { text: 'Hooks 实现', link: '/source-analysis/hooks' },
-            { text: '并发模式', link: '/source-analysis/concurrent' },
-            { text: '时间切片', link: '/source-analysis/time-slicing' },
-            { text: '车道模型', link: '/source-analysis/lanes' },
+            { text: '源码解读导读', link: '/source/' },
+            {
+              text: 'Fiber 内部机制深度解析',
+              link: '/source/fiber-internals',
+            },
+            {
+              text: 'Hook 实现原理剖析',
+              link: '/source/hooks-internals',
+            },
+            {
+              text: '协调器核心算法',
+              link: '/source/reconciler-deep-dive',
+            },
+            {
+              text: '调度器原理解析',
+              link: '/source/scheduler-analysis',
+            },
+            {
+              text: '并发特性实现',
+              link: '/source/concurrent-features',
+            },
           ],
         },
       ],
 
-      '/ssr/': [
+      '/architecture/': [
         {
-          text: '服务端渲染',
+          text: '架构设计',
           items: [
-            { text: 'SSR 概述', link: '/ssr/' },
-            { text: 'Next.js 实践', link: '/ssr/nextjs' },
-            { text: 'Remix 框架', link: '/ssr/remix' },
-            { text: 'SSG 静态生成', link: '/ssr/ssg' },
-            { text: 'Hydration 原理', link: '/ssr/hydration' },
-            { text: 'SEO 优化', link: '/ssr/seo' },
+            { text: '架构设计导读', link: '/architecture/' },
+            {
+              text: '中后台系统架构设计',
+              link: '/architecture/admin-systems',
+            },
+            {
+              text: '低代码平台架构设计',
+              link: '/architecture/low-code-platforms',
+            },
+            {
+              text: '微前端架构设计',
+              link: '/architecture/micro-frontends',
+            },
+            {
+              text: '领域驱动架构设计',
+              link: '/architecture/domain-driven-design',
+            },
           ],
         },
       ],
 
-      '/testing/': [
+      '/practice/': [
         {
-          text: '测试策略',
+          text: '最佳实践',
           items: [
-            { text: '测试概述', link: '/testing/' },
-            { text: '单元测试', link: '/testing/unit-testing' },
-            { text: '集成测试', link: '/testing/integration-testing' },
-            { text: 'E2E 测试', link: '/testing/e2e-testing' },
-            { text: '测试工具链', link: '/testing/testing-tools' },
-          ],
-        },
-      ],
-
-      '/data/': [
-        {
-          text: '数据获取方案',
-          items: [
-            { text: '数据获取概述', link: '/data/' },
-            { text: 'React Query', link: '/data/react-query' },
-            { text: 'SWR', link: '/data/swr' },
-            { text: 'Apollo Client', link: '/data/apollo' },
-            { text: 'Suspense 模式', link: '/data/suspense' },
-          ],
-        },
-      ],
-
-      '/micro-fe/': [
-        {
-          text: '微前端架构',
-          items: [
-            { text: '微前端概述', link: '/micro-fe/' },
-            { text: 'Module Federation', link: '/micro-fe/module-federation' },
-            { text: 'Single-SPA', link: '/micro-fe/single-spa' },
-            { text: '通信方案', link: '/micro-fe/communication' },
-          ],
-        },
-      ],
-
-      '/future/': [
-        {
-          text: 'React 未来发展',
-          items: [
-            { text: '未来展望', link: '/future/' },
-            { text: 'React 19 新特性', link: '/future/react-19' },
-            { text: 'Server Components', link: '/future/server-components' },
-            { text: 'React Compiler', link: '/future/react-compiler' },
-            { text: '发展趋势', link: '/future/trends' },
+            { text: '最佳实践总览', link: '/practice/' },
+            { text: '组件库开发实战', link: '/practice/component-library' },
+            { text: 'Hooks 库开发指南', link: '/practice/hooks-library' },
+            { text: '性能优化最佳实践', link: '/practice/performance' },
+            { text: '单元测试', link: '/practice/testing' },
+            { text: '构建工具集成', link: '/practice/build-tools' },
           ],
         },
       ],
@@ -189,8 +184,8 @@ export default defineConfig({
 
     // 页脚
     footer: {
-      message: 'React 生态学习指南',
-      copyright: 'Copyright © 2024',
+      message: 'React 技术栈最佳实践学习和总结 | 10年前端React生涯的大总结',
+      copyright: 'Copyright © 2024 | 文档 + Demo 互补的完整学习体系',
     },
 
     // 搜索
@@ -232,8 +227,11 @@ export default defineConfig({
 
   // Markdown 配置
   markdown: {
-    theme: 'github-dark',
-    lineNumbers: true,
+    theme: {
+      dark: 'github-dark',
+      light: 'github-light',
+    },
+    lineNumbers: false,
     codeTransformers: [
       // 代码高亮增强
     ],

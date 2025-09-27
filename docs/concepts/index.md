@@ -1,176 +1,91 @@
-# 核心概念
+# React 核心概念
 
-React 的核心概念是理解整个生态系统的基础。这一部分将深入解析 React 中最重要的概念和原理。
+> 🎯 深入理解React技术栈的核心概念和设计哲学
 
-## 🎯 学习目标
+## 📖 概念总览
 
-通过这一部分的学习，你将：
+React 作为现代前端开发的核心框架，涵盖了众多重要的技术概念。本章节将从原理出发，深入解析React生态系统中的关键技术和设计思想。
 
-- 理解 React 的核心思想和设计哲学
-- 掌握组件化开发的最佳实践
-- 深入了解状态管理和数据流
-- 学会性能优化的策略和技巧
+## 🏗️ 学习架构
 
-## 📋 内容概览
+### 🎣 Hook 系统
+**[React Hooks 系统原理与演进](/concepts/hooks)**
+- Hook设计理念与函数式编程思想
+- 内置Hook的实现原理和最佳实践
+- 自定义Hook的设计模式
+- Hook规则背后的技术原理
 
-### 基础概念
-- [JSX 与虚拟 DOM](./jsx-vdom) - React 的模板语法和渲染机制
-- [组件系统](./components) - 组件的设计和组织方式
-- [生命周期](./lifecycle) - 组件的生命周期管理
+### 🗃️ 状态管理
+**[状态管理哲学与方案](/concepts/state-management)**
+- 状态管理的演进历程
+- Redux、Zustand、Jotai、Context的技术对比
+- 企业级状态管理架构设计
+- 状态管理的性能考量
 
-### 状态管理
-- [状态管理](./state-management) - React 中的状态管理方案
-- [Hooks 机制](./hooks) - 函数组件的状态和副作用处理
+### 🧭 路由系统
+**[前端路由原理与实现](/concepts/routing)**
+- 前端路由的技术演进
+- React Router的设计理念变迁
+- 企业级路由架构模式
+- 路由性能优化策略
 
-### 高级特性
-- [事件系统](./events) - React 的事件处理机制
-- [性能优化](./performance) - React 应用性能优化策略
+### 🎨 样式方案
+**[样式解决方案演进史](/concepts/styling)**
+- CSS工程化的发展历程
+- CSS-in-JS与原生CSS的技术对比
+- 样式方案的性能与开发体验权衡
+- 大型项目的样式架构设计
 
-## 🌟 核心原则
+### 📊 数据获取
+**[数据获取方案深度解析](/concepts/data-fetching)**
+- 异步数据获取的设计模式
+- 缓存策略与状态同步
+- React Query、SWR、Apollo的技术对比
+- 服务端状态与客户端状态的协调
 
-### 1. 声明式编程
-React 采用声明式编程范式，开发者只需要描述 UI 应该是什么样子，而不需要关心如何操作 DOM。
+### 🌐 服务端渲染
+**[服务端渲染深度剖析](/concepts/ssr)**
+- SSR、SSG、ISR的技术原理
+- Next.js、Remix、Gatsby的架构对比
+- SEO与性能优化策略
+- 同构应用的技术挑战
 
-```jsx
-// 声明式 - React 方式
-function Counter({ count }) {
-  return <div>Count: {count}</div>
-}
+### 🧪 测试策略
+**[React测试策略与实践](/concepts/testing)**
+- React测试的理论基础
+- 单元测试、集成测试、E2E测试的边界
+- Testing Library的设计哲学
+- 测试驱动开发在React中的实践
 
-// 命令式 - 传统 DOM 方式
-function updateCounter(count) {
-  document.getElementById('counter').innerHTML = `Count: ${count}`
-}
-```
+## 🎯 学习建议
 
-### 2. 组件化
-将 UI 拆分成独立、可复用的组件，每个组件管理自己的状态和逻辑。
+### 📚 学习路径
+1. **基础概念** - 从Hook系统开始，理解现代React的设计理念
+2. **状态管理** - 掌握不同规模应用的状态管理策略
+3. **工程化实践** - 学习路由、样式、数据获取的工程化方案
+4. **服务端技术** - 理解全栈React应用的技术架构
+5. **质量保障** - 建立完善的测试策略
 
-```jsx
-// 组件化设计
-function App() {
-  return (
-    <div>
-      <Header />
-      <MainContent />
-      <Footer />
-    </div>
-  )
-}
-```
-
-### 3. 单向数据流
-数据从父组件流向子组件，通过 props 传递，子组件通过回调函数向父组件通信。
-
-```jsx
-function Parent() {
-  const [data, setData] = useState('Hello')
-  
-  return (
-    <Child 
-      data={data} 
-      onDataChange={setData} 
-    />
-  )
-}
-
-function Child({ data, onDataChange }) {
-  return (
-    <input 
-      value={data}
-      onChange={(e) => onDataChange(e.target.value)}
-    />
-  )
-}
-```
-
-### 4. Virtual DOM
-React 使用虚拟 DOM 来优化实际 DOM 操作，通过 Diff 算法计算最小变更。
-
-```jsx
-// React 会自动处理 DOM 更新
-function TodoList({ todos }) {
-  return (
-    <ul>
-      {todos.map(todo => (
-        <li key={todo.id}>{todo.text}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-## 🔄 React 的工作流程
-
-### 1. 初始渲染
-1. **创建虚拟 DOM** - React 根据 JSX 创建虚拟 DOM 树
-2. **Reconciliation** - 协调过程，计算需要更新的内容
-3. **Commit** - 将变更应用到实际 DOM
-
-### 2. 更新流程
-1. **触发更新** - 状态变化或 props 变化
-2. **重新渲染** - React 重新执行组件函数
-3. **Diff 比较** - 比较新旧虚拟 DOM 树
-4. **更新 DOM** - 只更新变化的部分
-
-```jsx
-function App() {
-  const [count, setCount] = useState(0)
-  
-  // 每次 count 变化，React 会：
-  // 1. 重新执行这个函数
-  // 2. 生成新的虚拟 DOM
-  // 3. 与上次的虚拟 DOM 对比
-  // 4. 只更新变化的文本节点
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>
-        Increment
-      </button>
-    </div>
-  )
-}
-```
-
-## 🧭 学习路径建议
-
-### 初学者
-1. 从 [JSX 与虚拟 DOM](./jsx-vdom) 开始
-2. 学习 [组件系统](./components) 的基础概念
-3. 掌握 [Hooks 机制](./hooks) 的使用
-
-### 进阶开发者
-1. 深入理解 [状态管理](./state-management) 的各种方案
-2. 学习 [性能优化](./performance) 的策略和技巧
-3. 了解 [事件系统](./events) 的实现原理
-
-### 高级开发者
-1. 研究源码实现和架构设计
-2. 关注最新的 React 特性和发展趋势
-3. 参与开源项目和社区贡献
-
-## 💡 最佳实践
-
-### 组件设计
-- **单一职责原则** - 每个组件只负责一个功能
-- **组合优于继承** - 使用组合模式而不是继承
-- **Props 接口设计** - 设计清晰、一致的 Props 接口
-
-### 状态管理
-- **状态提升** - 将共享状态提升到最近的公共父组件
-- **状态分割** - 合理分割状态，避免过度集中
-- **不可变数据** - 保持状态的不可变性
-
-### 性能优化
-- **避免不必要的渲染** - 使用 React.memo、useMemo、useCallback
-- **代码分割** - 使用动态导入进行代码分割
-- **虚拟化** - 对长列表使用虚拟化技术
+### 🧠 思维模型
+- **原理驱动** - 理解技术背后的设计原理
+- **场景导向** - 根据应用场景选择合适的技术方案
+- **权衡思维** - 在性能、开发体验、维护成本间找到平衡
+- **演进视角** - 了解技术的发展历程和未来趋势
 
 ## 🔗 相关资源
 
-- [React 官方文档](https://react.dev/)
-- [React 设计原则](https://react.dev/learn/thinking-in-react)
-- [JavaScript ES6+ 语法](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)
+### 📖 延伸阅读
+- [React 版本演进](/versions/) - 了解React的技术演进历程
+- [专家进阶](/advanced/) - 深入源码和架构设计
+- [最佳实践](/practice/) - 工程化实践和经验总结
 
-开始你的 React 核心概念学习之旅吧！每个概念都配有详细的解释和实践示例。
+### 🎮 交互演示
+通过实际的Demo项目，深入体验各个概念的实际效果：
+- [Hooks 交互演练](http://localhost:3001) - Hook系统的互动学习
+- [状态管理对比](http://localhost:3002) - 不同状态管理方案的直观对比
+- [路由系统演进](http://localhost:3003) - 路由技术的实际应用
+- [样式方案实战](http://localhost:3007) - 样式技术的视觉效果对比
+
+---
+
+*开始你的React核心概念探索之旅！*

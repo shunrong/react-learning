@@ -347,11 +347,160 @@ function Button({
 }
 ```
 
+#### 🔬 CSS Modules 深度源码解析
+
+让我们深入了解 CSS Modules 是如何实现作用域隔离的。这不是魔法，而是巧妙的编译时转换：
+
+**第一步：CSS 解析与转换**
+
+```javascript
+// webpack css-loader 的核心转换逻辑（简化版）
+function processCSSModules(cssContent, filename) {
+  const ast = postcss.parse(cssContent);
+  const classMap = {};
+  
+  // 遍历所有CSS规则
+  ast.walkRules(rule => {
+    // 解析选择器中的类名
+    rule.selector = rule.selector.replace(/\.([a-zA-Z_-][a-zA-Z0-9_-]*)/g, (match, className) => {
+      // 生成唯一的类名
+      const uniqueClassName = generateUniqueClassName(className, filename);
+      classMap[className] = uniqueClassName;
+      
+      return `.${uniqueClassName}`;
+    });
+  });
+  
+  return {
+    css: ast.toString(), // 转换后的CSS
+    classMap // 类名映射表
+  };
+}
+
+function generateUniqueClassName(originalName, filename) {
+  // 基于文件路径和类名生成哈希
+  const hash = crypto
+    .createHash('md5')
+    .update(filename + originalName)
+    .digest('hex')
+    .substring(0, 8);
+    
+  return `${originalName}_${hash}`;
+}
+```
+
+**第二步：JavaScript 模块生成**
+
+```javascript
+// 原始 Button.module.css
+/*
+.button { background: blue; }
+.primary { background: red; }
+.large { font-size: 18px; }
+*/
+
+// 经过 css-loader 处理后生成的 JavaScript 模块
+export default {
+  "button": "button_a1b2c3d4",
+  "primary": "primary_e5f6g7h8", 
+  "large": "large_i9j0k1l2"
+};
+
+// 同时生成转换后的CSS文件
+/*
+.button_a1b2c3d4 { background: blue; }
+.primary_e5f6g7h8 { background: red; }
+.large_i9j0k1l2 { font-size: 18px; }
+*/
+```
+
+**第三步：运行时类名映射**
+
+```jsx
+// 编译前的 React 组件
+import styles from './Button.module.css';
+
+function Button({ variant, size }) {
+  return (
+    <button className={`${styles.button} ${styles[variant]} ${styles[size]}`}>
+      Click me
+    </button>
+  );
+}
+
+// 实际执行时的类名映射
+function Button({ variant, size }) {
+  return (
+    <button className="button_a1b2c3d4 primary_e5f6g7h8 large_i9j0k1l2">
+      Click me
+    </button>
+  );
+}
+```
+
+**关键技术洞察**：
+
+1. **编译时哈希生成**：CSS Modules 的核心是在构建时为每个类名生成唯一标识符，通常基于文件路径 + 类名 + 内容哈希。
+
+2. **模块系统集成**：将 CSS 转换为 JavaScript 模块，使类名可以像变量一样被引用，获得了 IDE 支持和类型检查。
+
+3. **零运行时开销**：所有转换都在构建时完成，运行时只是普通的CSS类名，没有额外的JavaScript执行开销。
+
+```javascript
+// 深入 postcss-modules 插件的实现原理
+class CSSModulesPlugin {
+  constructor(options = {}) {
+    this.generateScopedName = options.generateScopedName || this.defaultGenerator;
+    this.getJSON = options.getJSON || (() => {});
+  }
+  
+  defaultGenerator(name, filename, css) {
+    // 生成作用域类名的默认策略
+    const hash = crypto.createHash('md5');
+    hash.update(css); // 基于CSS内容
+    hash.update(filename); // 基于文件路径
+    
+    return `${name}_${hash.digest('hex').substr(0, 8)}`;
+  }
+  
+  process(css, from) {
+    const exports = {};
+    const plugins = [
+      // 提取和转换类名
+      localByDefault({ mode: 'local' }),
+      extractImports(),
+      localByDefault({ mode: 'global' }),
+      scopePlugin({
+        generateScopedName: this.generateScopedName,
+        exportGlobals: true
+      })
+    ];
+    
+    return postcss(plugins)
+      .process(css, { from })
+      .then(result => {
+        // 收集导出的类名映射
+        result.messages.forEach(message => {
+          if (message.type === 'export') {
+            exports[message.name] = message.value;
+          }
+        });
+        
+        // 调用 getJSON 回调，让 webpack 可以生成 JS 模块
+        this.getJSON(from, exports);
+        
+        return result.css;
+      });
+  }
+}
+```
+
 **CSS Modules的优势**：
-- ✅ **作用域隔离** - 自动生成唯一类名，避免冲突
-- ✅ **CSS功能完整** - 支持所有CSS特性
-- ✅ **编译时优化** - 零运行时开销
-- ✅ **开发体验好** - 保持CSS的编写方式
+- ✅ **作用域隔离** - 通过编译时类名转换实现真正的样式隔离
+- ✅ **CSS功能完整** - 支持所有CSS特性，包括伪类、媒体查询、动画
+- ✅ **编译时优化** - 零运行时开销，最终输出的是优化后的静态CSS
+- ✅ **开发体验好** - 保持CSS的编写方式，同时获得JavaScript模块系统的好处
+- ✅ **类型安全** - 配合TypeScript可以获得类名的类型检查和自动补全
 
 ### 🌟 CSS-in-JS革命：Styled Components时代（2016-2020）
 
@@ -482,12 +631,261 @@ function App() {
 }
 ```
 
+#### 🔬 Styled Components 深度源码解析
+
+Styled Components 的魔法在于它巧妙地结合了 JavaScript 的灵活性和 CSS 的表达力。让我们深入其内部实现：
+
+**第一步：模板字符串解析**
+
+```javascript
+// styled-components 的核心解析引擎（简化版）
+function parseTemplateString(strings, ...interpolations) {
+  let cssString = '';
+  
+  // 合并模板字符串和插值
+  for (let i = 0; i < strings.length; i++) {
+    cssString += strings[i];
+    
+    if (i < interpolations.length) {
+      const interpolation = interpolations[i];
+      
+      // 处理函数插值（props => props.primary ? 'blue' : 'gray'）
+      if (typeof interpolation === 'function') {
+        // 标记为动态值，运行时处理
+        cssString += `__DYNAMIC_${i}__`;
+      } else {
+        // 静态值直接插入
+        cssString += interpolation;
+      }
+    }
+  }
+  
+  return {
+    staticCSS: cssString,
+    dynamicInterpolations: interpolations.filter(i => typeof i === 'function')
+  };
+}
+
+// 使用示例
+const Button = styled.button`
+  background: ${props => props.primary ? 'blue' : 'gray'};
+  color: white;
+  padding: 16px;
+`;
+
+// 解析结果
+const parsed = parseTemplateString(
+  ['background: ', '; color: white; padding: 16px;'],
+  props => props.primary ? 'blue' : 'gray'
+);
+// {
+//   staticCSS: "background: __DYNAMIC_0__; color: white; padding: 16px;",
+//   dynamicInterpolations: [props => props.primary ? 'blue' : 'gray']
+// }
+```
+
+**第二步：样式组件工厂**
+
+```javascript
+// styled.button 的实现原理
+function createStyledComponent(tag) {
+  return function styledTemplate(strings, ...interpolations) {
+    // 解析模板字符串
+    const { staticCSS, dynamicInterpolations } = parseTemplateString(strings, ...interpolations);
+    
+    // 生成唯一的组件ID
+    const componentId = generateComponentId();
+    
+    // 返回 React 组件
+    return React.forwardRef((props, ref) => {
+      // 计算动态样式
+      const dynamicCSS = dynamicInterpolations.map(fn => fn(props)).join('');
+      const finalCSS = staticCSS.replace(/__DYNAMIC_\d+__/g, () => dynamicCSS);
+      
+      // 生成唯一类名
+      const className = `sc-${componentId}`;
+      
+      // 注入样式到 DOM
+      injectStyles(className, finalCSS);
+      
+      // 渲染组件
+      return React.createElement(tag, {
+        ...props,
+        ref,
+        className: `${className} ${props.className || ''}`
+      });
+    });
+  };
+}
+
+// styled 对象的实现
+const styled = new Proxy({}, {
+  get(target, prop) {
+    // 动态生成 styled.button, styled.div 等
+    return createStyledComponent(prop);
+  }
+});
+```
+
+**第三步：运行时样式注入**
+
+```javascript
+// StyleSheet 管理器 - 负责样式的注入和管理
+class StyleSheetManager {
+  constructor() {
+    this.sheet = this.createStyleSheet();
+    this.injected = new Set(); // 避免重复注入
+  }
+  
+  createStyleSheet() {
+    // 创建或复用 <style> 标签
+    let style = document.querySelector('#styled-components');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'styled-components';
+      style.type = 'text/css';
+      document.head.appendChild(style);
+    }
+    return style.sheet;
+  }
+  
+  injectRule(className, cssRule) {
+    const ruleText = `.${className} { ${cssRule} }`;
+    
+    // 避免重复注入相同的规则
+    if (this.injected.has(ruleText)) {
+      return;
+    }
+    
+    try {
+      // 插入CSS规则到样式表
+      this.sheet.insertRule(ruleText, this.sheet.cssRules.length);
+      this.injected.add(ruleText);
+    } catch (error) {
+      console.warn('Failed to inject CSS rule:', ruleText, error);
+    }
+  }
+}
+
+const styleSheetManager = new StyleSheetManager();
+
+function injectStyles(className, css) {
+  styleSheetManager.injectRule(className, css);
+}
+```
+
+**第四步：主题系统实现**
+
+```javascript
+// ThemeProvider 的核心实现
+const ThemeContext = React.createContext();
+
+function ThemeProvider({ theme, children }) {
+  return (
+    <ThemeContext.Provider value={theme}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// 在组件中使用主题
+function createStyledComponent(tag) {
+  return function styledTemplate(strings, ...interpolations) {
+    const { staticCSS, dynamicInterpolations } = parseTemplateString(strings, ...interpolations);
+    const componentId = generateComponentId();
+    
+    return React.forwardRef((props, ref) => {
+      // 获取主题
+      const theme = React.useContext(ThemeContext);
+      
+      // 将主题注入到 props 中
+      const propsWithTheme = { ...props, theme };
+      
+      // 计算动态样式（现在包含主题）
+      const dynamicCSS = dynamicInterpolations
+        .map(fn => fn(propsWithTheme))
+        .join('');
+      
+      const finalCSS = staticCSS.replace(/__DYNAMIC_\d+__/g, () => dynamicCSS);
+      const className = `sc-${componentId}`;
+      
+      injectStyles(className, finalCSS);
+      
+      return React.createElement(tag, {
+        ...props,
+        ref,
+        className: `${className} ${props.className || ''}`
+      });
+    });
+  };
+}
+```
+
+**第五步：性能优化机制**
+
+```javascript
+// 样式缓存和优化
+class StyledComponentsCache {
+  constructor() {
+    this.componentCache = new Map(); // 组件实例缓存
+    this.styleCache = new Map();     // 样式计算缓存
+  }
+  
+  // 基于 props 生成缓存键
+  getCacheKey(props) {
+    // 只缓存影响样式的 props
+    const styleProps = Object.keys(props)
+      .filter(key => this.isStyleProp(key))
+      .sort()
+      .map(key => `${key}:${props[key]}`)
+      .join('|');
+    
+    return styleProps;
+  }
+  
+  // 缓存样式计算结果
+  getComputedStyle(componentId, props, interpolations) {
+    const cacheKey = `${componentId}:${this.getCacheKey(props)}`;
+    
+    if (this.styleCache.has(cacheKey)) {
+      return this.styleCache.get(cacheKey);
+    }
+    
+    // 计算样式
+    const computedStyle = interpolations.map(fn => fn(props)).join('');
+    this.styleCache.set(cacheKey, computedStyle);
+    
+    return computedStyle;
+  }
+  
+  isStyleProp(prop) {
+    // 识别哪些 props 会影响样式
+    return !['children', 'onClick', 'onHover', 'ref'].includes(prop);
+  }
+}
+
+const cache = new StyledComponentsCache();
+```
+
+**关键技术洞察**：
+
+1. **模板字符串魔法**：利用 ES6 模板字符串的标签函数特性，将 CSS 和 JavaScript 无缝结合。
+
+2. **运行时样式注入**：动态创建和管理 `<style>` 标签，实现样式的按需注入和更新。
+
+3. **React 组件包装**：每个 styled 组件实际上是一个高阶组件，包装了原生 DOM 元素并注入计算后的样式。
+
+4. **上下文主题系统**：通过 React Context 实现全局主题管理，使得任何组件都能访问主题变量。
+
+5. **智能缓存机制**：缓存样式计算结果，避免重复计算，提升运行时性能。
+
 **CSS-in-JS的革命性优势**：
-- ✅ **完全的组件化** - 样式与组件逻辑无缝集成
-- ✅ **动态样式** - 基于props和context的强大样式计算
-- ✅ **主题系统** - 内置的主题支持和动态切换
-- ✅ **作用域隔离** - 自动生成唯一类名
-- ✅ **开发体验** - 语法高亮、自动补全、类型检查
+- ✅ **完全的组件化** - 样式与组件逻辑在同一个文件中，真正的"关注点分离"
+- ✅ **动态样式** - 基于 props、state、context 的强大样式计算能力  
+- ✅ **主题系统** - 内置的主题支持，支持动态切换和深度定制
+- ✅ **作用域隔离** - 自动生成唯一类名，彻底解决样式冲突问题
+- ✅ **开发体验** - 完整的 TypeScript 支持，语法高亮，自动补全
+- ✅ **运行时优化** - 智能缓存和按需注入，减少不必要的样式计算
 
 ### ⚡ 现代时代：Atomic CSS与实用优先（2017-至今）
 
@@ -558,12 +956,365 @@ function CustomButton({ variant = 'primary', size = 'medium', children, ...props
 }
 ```
 
+#### 🔬 Tailwind CSS 深度源码解析
+
+Tailwind CSS 的核心是一个强大的编译器，它能够分析你的代码并生成最小化的 CSS。让我们深入了解这个"魔法"：
+
+**第一步：类名扫描与解析**
+
+```javascript
+// Tailwind CSS 扫描器的核心实现（简化版）
+class TailwindScanner {
+  constructor(config) {
+    this.config = config;
+    this.classMap = new Map(); // 缓存解析结果
+    this.usedClasses = new Set(); // 记录使用的类名
+  }
+  
+  // 扫描文件内容，提取类名
+  scanContent(content, filePath) {
+    // 匹配各种类名格式
+    const patterns = [
+      /className\s*=\s*["'`]([^"'`]+)["'`]/g,       // React className
+      /class\s*=\s*["'`]([^"'`]+)["'`]/g,           // HTML class
+      /classList\.add\(['"`]([^'"`]+)['"`]\)/g,     // JavaScript classList
+      /@apply\s+([^;]+);/g,                         // CSS @apply
+      /clsx\(([^)]+)\)/g,                           // clsx()
+      /classnames\(([^)]+)\)/g,                     // classnames()
+    ];
+    
+    const extractedClasses = new Set();
+    
+    patterns.forEach(pattern => {
+      let match;
+      while ((match = pattern.exec(content)) !== null) {
+        // 分割并清理类名
+        const classes = match[1]
+          .split(/\s+/)
+          .map(cls => cls.trim())
+          .filter(cls => cls && this.isValidTailwindClass(cls));
+        
+        classes.forEach(cls => extractedClasses.add(cls));
+      }
+    });
+    
+    return extractedClasses;
+  }
+  
+  // 验证是否为有效的 Tailwind 类名
+  isValidTailwindClass(className) {
+    // 检查类名是否符合 Tailwind 命名规则
+    const tailwindPatterns = [
+      /^(m|p)[trblxy]?-\d+$/,           // margin, padding
+      /^(w|h)-(\d+|auto|full|screen)$/, // width, height
+      /^text-(xs|sm|lg|xl|\d*xl)$/,     // font size
+      /^bg-(red|blue|green|gray)-\d{3}$/, // background colors
+      /^flex(-\w+)?$/,                  // flexbox
+      /^grid(-\w+)?$/,                  // grid
+      /^(hidden|block|inline)$/,        // display
+      // ... 更多模式
+    ];
+    
+    return tailwindPatterns.some(pattern => pattern.test(className));
+  }
+}
+```
+
+**第二步：CSS 生成引擎**
+
+```javascript
+// Tailwind CSS 生成引擎的核心逻辑
+class TailwindGenerator {
+  constructor(config) {
+    this.config = config;
+    this.utilities = this.buildUtilityMap();
+    this.components = this.buildComponentMap();
+  }
+  
+  // 构建工具类映射表
+  buildUtilityMap() {
+    const utilities = new Map();
+    
+    // 间距工具类（margin, padding）
+    const spacingScale = this.config.theme.spacing;
+    Object.entries(spacingScale).forEach(([key, value]) => {
+      utilities.set(`m-${key}`, { margin: value });
+      utilities.set(`mt-${key}`, { 'margin-top': value });
+      utilities.set(`mr-${key}`, { 'margin-right': value });
+      utilities.set(`mb-${key}`, { 'margin-bottom': value });
+      utilities.set(`ml-${key}`, { 'margin-left': value });
+      utilities.set(`mx-${key}`, { 
+        'margin-left': value, 
+        'margin-right': value 
+      });
+      utilities.set(`my-${key}`, { 
+        'margin-top': value, 
+        'margin-bottom': value 
+      });
+      
+      // 同样处理 padding
+      utilities.set(`p-${key}`, { padding: value });
+      // ... 更多 padding 变体
+    });
+    
+    // 颜色工具类
+    const colors = this.config.theme.colors;
+    Object.entries(colors).forEach(([colorName, colorShades]) => {
+      if (typeof colorShades === 'object') {
+        Object.entries(colorShades).forEach(([shade, value]) => {
+          utilities.set(`text-${colorName}-${shade}`, { color: value });
+          utilities.set(`bg-${colorName}-${shade}`, { 'background-color': value });
+          utilities.set(`border-${colorName}-${shade}`, { 'border-color': value });
+        });
+      }
+    });
+    
+    // 尺寸工具类
+    const sizing = { ...this.config.theme.width, ...this.config.theme.height };
+    Object.entries(sizing).forEach(([key, value]) => {
+      utilities.set(`w-${key}`, { width: value });
+      utilities.set(`h-${key}`, { height: value });
+    });
+    
+    return utilities;
+  }
+  
+  // 生成指定类名的 CSS
+  generateCSS(className, variants = []) {
+    const utility = this.utilities.get(className);
+    if (!utility) {
+      return null;
+    }
+    
+    // 构建 CSS 规则
+    let cssRule = `.${this.escapeClassName(className)} {\n`;
+    Object.entries(utility).forEach(([property, value]) => {
+      cssRule += `  ${property}: ${value};\n`;
+    });
+    cssRule += '}';
+    
+    // 处理响应式变体
+    const responsiveCSS = this.generateResponsiveVariants(className, cssRule, variants);
+    
+    // 处理伪类变体
+    const pseudoCSS = this.generatePseudoVariants(className, cssRule, variants);
+    
+    return [cssRule, ...responsiveCSS, ...pseudoCSS].join('\n');
+  }
+  
+  // 处理响应式变体
+  generateResponsiveVariants(className, baseRule, variants) {
+    const responsive = variants.filter(v => this.config.theme.screens[v]);
+    return responsive.map(breakpoint => {
+      const mediaQuery = this.config.theme.screens[breakpoint];
+      return `@media (min-width: ${mediaQuery}) {\n  .${breakpoint}\\:${this.escapeClassName(className)} {\n${baseRule.replace(/^\..*\{/, '').replace(/\}$/, '').split('\n').map(line => `  ${line}`).join('\n')}\n  }\n}`;
+    });
+  }
+  
+  // 处理伪类变体
+  generatePseudoVariants(className, baseRule, variants) {
+    const pseudos = {
+      'hover': ':hover',
+      'focus': ':focus',
+      'active': ':active',
+      'disabled': ':disabled',
+      'first': ':first-child',
+      'last': ':last-child'
+    };
+    
+    return variants
+      .filter(v => pseudos[v])
+      .map(variant => {
+        const pseudo = pseudos[variant];
+        return `.${variant}\\:${this.escapeClassName(className)}${pseudo} {\n${baseRule.replace(/^\..*\{/, '').replace(/\}$/, '').split('\n').map(line => `  ${line}`).join('\n')}\n}`;
+      });
+  }
+  
+  escapeClassName(className) {
+    // 转义特殊字符，如 :、/ 等
+    return className.replace(/[:.\/]/g, '\\$&');
+  }
+}
+```
+
+**第三步：智能优化与 Purging**
+
+```javascript
+// Tailwind 的 PurgeCSS 集成
+class TailwindPurger {
+  constructor(config) {
+    this.config = config;
+    this.safelist = new Set(config.safelist || []);
+    this.blocklist = new Set(config.blocklist || []);
+  }
+  
+  // 分析代码中实际使用的类名
+  purgeUnusedStyles(generatedCSS, usedClasses) {
+    const ast = this.parseCSS(generatedCSS);
+    const usedRules = [];
+    
+    ast.rules.forEach(rule => {
+      if (this.shouldKeepRule(rule, usedClasses)) {
+        usedRules.push(rule);
+      }
+    });
+    
+    // 重建 CSS
+    return this.rebuildCSS(usedRules);
+  }
+  
+  shouldKeepRule(rule, usedClasses) {
+    // 基础层：始终保留
+    if (rule.layer === 'base') {
+      return true;
+    }
+    
+    // 组件层：检查是否被使用
+    if (rule.layer === 'components') {
+      return this.isComponentUsed(rule, usedClasses);
+    }
+    
+    // 工具类层：精确匹配
+    if (rule.layer === 'utilities') {
+      return this.isUtilityUsed(rule, usedClasses);
+    }
+    
+    return false;
+  }
+  
+  isUtilityUsed(rule, usedClasses) {
+    // 提取规则对应的类名
+    const classNames = this.extractClassNames(rule.selector);
+    
+    return classNames.some(className => {
+      // 检查完整类名
+      if (usedClasses.has(className)) {
+        return true;
+      }
+      
+      // 检查动态类名（如 text-red-${shade}）
+      return this.checkDynamicMatch(className, usedClasses);
+    });
+  }
+  
+  checkDynamicMatch(className, usedClasses) {
+    // 处理动态生成的类名
+    const patterns = [
+      /^(\w+)-(\w+)-\d+$/,  // text-red-500
+      /^(\w+)-\d+$/,        // p-4, m-8
+      /^(\w+)-(sm|md|lg|xl)$/ // text-sm, text-lg
+    ];
+    
+    return Array.from(usedClasses).some(usedClass => {
+      return patterns.some(pattern => {
+        const match1 = className.match(pattern);
+        const match2 = usedClass.match(pattern);
+        return match1 && match2 && match1[1] === match2[1];
+      });
+    });
+  }
+}
+```
+
+**第四步：JIT (Just-In-Time) 编译**
+
+```javascript
+// Tailwind JIT 编译器 - 实时生成样式
+class TailwindJIT {
+  constructor(config) {
+    this.config = config;
+    this.cache = new Map();
+    this.watcher = null;
+  }
+  
+  // 启动 JIT 模式
+  start() {
+    // 监听文件变化
+    this.watcher = chokidar.watch(this.config.content, {
+      ignored: /node_modules/,
+      persistent: true
+    });
+    
+    this.watcher.on('change', (filePath) => {
+      this.processFile(filePath);
+    });
+  }
+  
+  // 处理单个文件
+  async processFile(filePath) {
+    const content = await fs.readFile(filePath, 'utf8');
+    const newClasses = this.extractClasses(content);
+    
+    // 增量生成 CSS
+    const newCSS = this.generateIncrementalCSS(newClasses);
+    
+    if (newCSS) {
+      // 热更新 CSS
+      this.updateStyles(newCSS);
+    }
+  }
+  
+  // 增量生成 CSS
+  generateIncrementalCSS(newClasses) {
+    const uncachedClasses = newClasses.filter(cls => !this.cache.has(cls));
+    
+    if (uncachedClasses.length === 0) {
+      return null;
+    }
+    
+    let css = '';
+    uncachedClasses.forEach(className => {
+      const generated = this.generateUtilityCSS(className);
+      if (generated) {
+        css += generated + '\n';
+        this.cache.set(className, generated);
+      }
+    });
+    
+    return css;
+  }
+  
+  // 生成单个工具类的 CSS
+  generateUtilityCSS(className) {
+    // 解析类名中的变体（如 hover:, md:）
+    const { variants, baseClass } = this.parseClassName(className);
+    
+    // 生成基础 CSS
+    const baseCSS = this.generator.generateCSS(baseClass, variants);
+    
+    return baseCSS;
+  }
+  
+  parseClassName(className) {
+    const parts = className.split(':');
+    const baseClass = parts.pop();
+    const variants = parts;
+    
+    return { variants, baseClass };
+  }
+}
+```
+
+**关键技术洞察**：
+
+1. **智能扫描机制**：Tailwind 使用多种正则表达式模式来识别代码中的类名，不仅仅是 `className` 属性。
+
+2. **映射表生成**：通过配置文件生成巨大的工具类映射表，每个类名对应具体的 CSS 属性。
+
+3. **变体系统**：响应式（`md:`）、伪类（`hover:`）、暗色模式（`dark:`）等变体通过前缀系统统一管理。
+
+4. **JIT 编译**：只为实际使用的类名生成 CSS，实现零冗余和无限扩展性。
+
+5. **Purging 优化**：生产环境自动移除未使用的样式，保证最小化的 CSS 体积。
+
 **Atomic CSS的优势**：
-- ✅ **极致的复用性** - 每个工具类都可以复用
-- ✅ **快速开发** - 无需编写自定义CSS
-- ✅ **一致性保证** - 设计系统内置在框架中
-- ✅ **性能优化** - 生产环境自动清理未使用的样式
-- ✅ **响应式友好** - 内置响应式设计支持
+- ✅ **极致的复用性** - 每个工具类都可以在任何地方复用
+- ✅ **快速开发** - 无需编写自定义CSS，直接在HTML中组合样式
+- ✅ **一致性保证** - 设计系统内置在框架中，确保视觉一致性
+- ✅ **性能优化** - JIT编译和生产环境Purging确保最小CSS体积
+- ✅ **响应式友好** - 内置的响应式设计支持，无需媒体查询
+- ✅ **无需命名** - 告别"如何命名CSS类"的痛苦，专注业务逻辑
+- ✅ **可预测性** - 类名和样式一一对应，没有副作用
 
 ## 🔍 四大现代方案深度对比
 
@@ -1093,9 +1844,374 @@ function App() {
 - ✅ 对包体积敏感的项目
 - ✅ 需要服务端渲染优化
 
+#### 🔬 Emotion 深度源码解析
+
+Emotion 作为新一代 CSS-in-JS 库，通过巧妙的编译时优化和运行时缓存机制实现了卓越的性能。让我们深入其核心实现：
+
+**第一步：CSS Prop 的转换魔法**
+
+```javascript
+// Emotion 的 Babel 插件核心转换逻辑
+function transformCSSProp(path, state) {
+  const jsxElement = path.node;
+  
+  // 查找 css prop
+  const cssAttribute = jsxElement.openingElement.attributes.find(
+    attr => attr.name && attr.name.name === 'css'
+  );
+  
+  if (!cssAttribute) return;
+  
+  // 转换前：
+  // <div css={css`color: red;`} />
+  
+  // 转换后：
+  // <div className={css`color: red;`} />
+  
+  // 移除原 css prop
+  jsxElement.openingElement.attributes = jsxElement.openingElement.attributes.filter(
+    attr => attr !== cssAttribute
+  );
+  
+  // 添加 className prop
+  const classNameProp = t.jsxAttribute(
+    t.jsxIdentifier('className'),
+    t.jsxExpressionContainer(cssAttribute.value.expression)
+  );
+  
+  jsxElement.openingElement.attributes.push(classNameProp);
+}
+
+// 模板字符串处理
+function processCSSTemplate(quasi, expressions) {
+  // 解析模板字符串
+  const { staticCSS, dynamicParts } = parseTemplateString(quasi, expressions);
+  
+  // 生成运行时代码
+  return t.callExpression(
+    t.identifier('css'),
+    [
+      t.templateLiteral(
+        quasi.quasis,
+        expressions.map(expr => t.templateElement({ cooked: '', raw: '' }))
+      ),
+      ...expressions
+    ]
+  );
+}
+```
+
+**第二步：样式缓存与哈希生成**
+
+```javascript
+// Emotion 的缓存系统核心实现
+class EmotionCache {
+  constructor(options = {}) {
+    this.cache = new Map(); // 样式缓存
+    this.inserted = new Map(); // 已注入样式记录
+    this.sheet = this.createStyleSheet();
+    this.key = options.key || 'css'; // 缓存键前缀
+  }
+  
+  // 样式哈希生成
+  generateHash(css) {
+    let hash = 5381;
+    let i = css.length;
+    
+    // djb2 哈希算法 - 快速且分布良好
+    while (i) {
+      hash = (hash * 33) ^ css.charCodeAt(--i);
+    }
+    
+    return (hash >>> 0).toString(36); // 转为36进制字符串
+  }
+  
+  // 获取或创建样式类名
+  getClassName(css, labels = []) {
+    const hash = this.generateHash(css);
+    const className = `${this.key}-${hash}`;
+    
+    // 检查缓存
+    if (this.cache.has(hash)) {
+      return this.cache.get(hash).className;
+    }
+    
+    // 生成新的样式对象
+    const styleObject = {
+      name: className,
+      styles: css,
+      map: undefined, // sourcemap 信息
+      next: undefined  // 链表结构用于组合
+    };
+    
+    // 缓存样式对象
+    this.cache.set(hash, styleObject);
+    
+    // 注入到 DOM
+    this.insertRule(styleObject);
+    
+    return className;
+  }
+  
+  // 样式注入优化
+  insertRule(styleObject) {
+    const { name, styles } = styleObject;
+    
+    // 检查是否已注入
+    if (this.inserted.has(name)) {
+      return;
+    }
+    
+    try {
+      // 构建完整的 CSS 规则
+      const rule = `.${name}{${styles}}`;
+      
+      // 插入到样式表
+      this.sheet.insertRule(rule, this.sheet.cssRules.length);
+      
+      // 标记为已注入
+      this.inserted.set(name, true);
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('Failed to insert CSS rule:', error);
+      }
+    }
+  }
+  
+  createStyleSheet() {
+    const style = document.createElement('style');
+    style.setAttribute('data-emotion', this.key);
+    document.head.appendChild(style);
+    return style.sheet;
+  }
+}
+
+// 全局缓存实例
+const defaultCache = new EmotionCache();
+```
+
+**第三步：CSS 函数的实现核心**
+
+```javascript
+// css 函数的核心实现
+function css(template, ...args) {
+  // 处理不同的调用方式
+  if (typeof template === 'string') {
+    // 直接字符串：css('color: red;')
+    return processCSSString(template);
+  }
+  
+  if (Array.isArray(template)) {
+    // 模板字符串：css`color: ${color};`
+    return processTemplateString(template, args);
+  }
+  
+  if (typeof template === 'object' && template !== null) {
+    // 样式对象：css({ color: 'red' })
+    return processStyleObject(template);
+  }
+  
+  return '';
+}
+
+function processTemplateString(strings, values) {
+  let css = '';
+  
+  // 合并字符串和插值
+  for (let i = 0; i < strings.length; i++) {
+    css += strings[i];
+    
+    if (i < values.length) {
+      const value = values[i];
+      
+      // 处理函数插值（主题等动态值）
+      if (typeof value === 'function') {
+        // 延迟执行，运行时计算
+        css += '__EMOTION_FUNCTION_' + i + '__';
+      } else if (typeof value === 'object' && value.name) {
+        // 组合其他 emotion 样式
+        css += value.styles;
+      } else {
+        // 普通值直接插入
+        css += String(value || '');
+      }
+    }
+  }
+  
+  // 生成类名并缓存
+  const className = defaultCache.getClassName(css);
+  
+  return {
+    name: className,
+    styles: css,
+    toString: () => className
+  };
+}
+
+// 样式对象转CSS字符串
+function processStyleObject(styleObj) {
+  let css = '';
+  
+  Object.entries(styleObj).forEach(([property, value]) => {
+    // 处理驼峰命名转换
+    const cssProperty = camelCaseToKebabCase(property);
+    
+    // 处理数值单位
+    const cssValue = addUnitIfNeeded(property, value);
+    
+    css += `${cssProperty}: ${cssValue}; `;
+  });
+  
+  return processTemplateString([css], []);
+}
+
+function camelCaseToKebabCase(str) {
+  return str.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+}
+
+function addUnitIfNeeded(property, value) {
+  // 需要添加 px 单位的属性
+  const unitlessProperties = new Set([
+    'animationIterationCount', 'borderImageOutset', 'borderImageSlice',
+    'borderImageWidth', 'boxFlex', 'boxFlexGroup', 'boxOrdinalGroup',
+    'columnCount', 'columns', 'flex', 'flexGrow', 'flexPositive',
+    'flexShrink', 'flexNegative', 'flexOrder', 'gridArea', 'gridRow',
+    'gridRowEnd', 'gridRowSpan', 'gridRowStart', 'gridColumn',
+    'gridColumnEnd', 'gridColumnSpan', 'gridColumnStart', 'fontWeight',
+    'lineClamp', 'lineHeight', 'opacity', 'order', 'orphans', 'tabSize',
+    'widows', 'zIndex', 'zoom'
+  ]);
+  
+  if (typeof value === 'number' && !unitlessProperties.has(property)) {
+    return `${value}px`;
+  }
+  
+  return value;
+}
+```
+
+**第四步：主题系统与上下文**
+
+```javascript
+// Emotion 主题系统实现
+const ThemeContext = React.createContext();
+
+function ThemeProvider({ theme, children }) {
+  return (
+    <ThemeContext.Provider value={theme}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+function useTheme() {
+  const theme = React.useContext(ThemeContext);
+  if (!theme) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return theme;
+}
+
+// 增强的 css 函数，支持主题
+function withTheme(Component) {
+  return React.forwardRef((props, ref) => {
+    const theme = useTheme();
+    return <Component {...props} theme={theme} ref={ref} />;
+  });
+}
+
+// 处理主题相关的样式函数
+function processThemeFunction(fn, props, theme) {
+  // 为样式函数提供主题和 props 上下文
+  const context = { ...props, theme };
+  
+  try {
+    return fn(context);
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('Error in theme function:', error);
+    }
+    return '';
+  }
+}
+```
+
+**第五步：服务端渲染优化**
+
+```javascript
+// Emotion SSR 优化实现
+class EmotionSSRCache extends EmotionCache {
+  constructor(options = {}) {
+    super(options);
+    this.serialized = new Map(); // 序列化缓存
+    this.cssRules = []; // 收集的 CSS 规则
+  }
+  
+  // 收集关键 CSS
+  extractCriticalCSS(html) {
+    const usedClassNames = this.extractUsedClassNames(html);
+    const criticalRules = [];
+    
+    usedClassNames.forEach(className => {
+      const hash = className.replace(this.key + '-', '');
+      const styleObject = this.cache.get(hash);
+      
+      if (styleObject) {
+        criticalRules.push(`.${className}{${styleObject.styles}}`);
+      }
+    });
+    
+    return criticalRules.join('\n');
+  }
+  
+  extractUsedClassNames(html) {
+    const classRegex = new RegExp(`class="[^"]*\\b(${this.key}-\\w+)\\b[^"]*"`, 'g');
+    const classNames = new Set();
+    let match;
+    
+    while ((match = classRegex.exec(html)) !== null) {
+      const classList = match[0].match(/class="([^"]*)"/)[1].split(/\s+/);
+      classList.forEach(cls => {
+        if (cls.startsWith(this.key + '-')) {
+          classNames.add(cls);
+        }
+      });
+    }
+    
+    return classNames;
+  }
+  
+  // 生成 SSR 安全的样式标签
+  renderToString() {
+    const css = Array.from(this.inserted.keys())
+      .map(className => {
+        const hash = className.replace(this.key + '-', '');
+        const styleObject = this.cache.get(hash);
+        return styleObject ? `.${className}{${styleObject.styles}}` : '';
+      })
+      .filter(Boolean)
+      .join('\n');
+    
+    return `<style data-emotion="${this.key}">${css}</style>`;
+  }
+}
+```
+
+**关键技术洞察**：
+
+1. **编译时优化**：通过 Babel 插件在构建时转换 `css` prop，减少运行时开销。
+
+2. **高效缓存机制**：使用哈希算法快速生成唯一类名，避免重复样式的生成和注入。
+
+3. **多API设计**：支持模板字符串、对象、函数等多种样式定义方式，适应不同使用场景。
+
+4. **智能类名生成**：基于样式内容生成确定性的类名，相同样式总是生成相同类名。
+
+5. **SSR 友好**：提供完整的服务端渲染支持，包括关键CSS提取和安全的样式注入。
+
 **优势与限制**：
-- ✅ **性能优秀** - 更好的运行时性能和更小的包体积
-- ✅ **API灵活** - 提供多种样式编写方式
+- ✅ **性能优秀** - 通过编译时优化和智能缓存实现更好的运行时性能
+- ✅ **API灵活** - 提供 css prop、styled、样式对象等多种编写方式
 - ✅ **开发体验** - 优秀的TypeScript支持和调试体验
 - ❌ **配置复杂** - 需要babel插件配置才能发挥最佳性能
 - ❌ **生态相对小** - 社区和插件生态不如Styled Components丰富
@@ -2380,6 +3496,664 @@ customElements.define('my-button', MyButton);
   }
 }
 ```
+
+## 🏗️ 企业级架构实战：大型项目中的样式方案设计
+
+在理解了各种样式技术的原理之后，让我们看看在真实的企业级项目中如何进行技术选型和架构设计。
+
+### 🏢 案例一：电商平台样式架构设计
+
+**项目背景**：年营收10亿+的电商平台，支持多品牌、多主题、多语言
+
+**架构选择**：CSS Modules + Styled Components 混合方案
+
+```javascript
+// 架构层次设计
+const StyleArchitecture = {
+  // 第一层：全局基础样式（CSS Modules）
+  base: {
+    // reset.module.css - 全局重置
+    // variables.module.css - CSS变量定义  
+    // typography.module.css - 字体排版
+    // layout.module.css - 布局系统
+  },
+  
+  // 第二层：组件库样式（Styled Components）
+  components: {
+    // 基础组件：Button, Input, Modal等
+    // 业务组件：ProductCard, OrderSummary等
+    // 完全组件化，支持主题切换
+  },
+  
+  // 第三层：页面级样式（CSS Modules）
+  pages: {
+    // 页面特有的布局和样式
+    // 性能敏感的样式
+  }
+};
+
+// 基础层实现
+/* variables.module.css */
+:root {
+  /* 品牌色彩系统 */
+  --brand-primary: #1976d2;
+  --brand-secondary: #dc004e;
+  --brand-success: #388e3c;
+  --brand-warning: #f57c00;
+  --brand-error: #d32f2f;
+  
+  /* 语义化色彩 */
+  --color-text-primary: #212121;
+  --color-text-secondary: #757575;
+  --color-background: #fafafa;
+  --color-surface: #ffffff;
+  
+  /* 间距系统 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* 阴影系统 */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.16);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.19);
+  
+  /* 断点系统 */
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+}
+
+/* 多主题支持 */
+[data-theme="dark"] {
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b0bec5;
+  --color-background: #121212;
+  --color-surface: #1e1e1e;
+}
+
+[data-theme="christmas"] {
+  --brand-primary: #c62828;
+  --brand-secondary: #2e7d32;
+  /* 节日主题色彩 */
+}
+
+// 组件库层实现 - 基础按钮组件
+import styled, { css } from 'styled-components';
+
+// 按钮尺寸系统
+const buttonSizes = {
+  small: css`
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 14px;
+    border-radius: 4px;
+  `,
+  medium: css`
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
+    border-radius: 6px;
+  `,
+  large: css`
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 18px;
+    border-radius: 8px;
+  `
+};
+
+// 按钮变体系统
+const buttonVariants = {
+  primary: css`
+    background: var(--brand-primary);
+    color: white;
+    border: 2px solid var(--brand-primary);
+    
+    &:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--brand-primary) 90%, black);
+      border-color: color-mix(in srgb, var(--brand-primary) 90%, black);
+    }
+  `,
+  secondary: css`
+    background: transparent;
+    color: var(--brand-primary);
+    border: 2px solid var(--brand-primary);
+    
+    &:hover:not(:disabled) {
+      background: var(--brand-primary);
+      color: white;
+    }
+  `,
+  ghost: css`
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 2px solid transparent;
+    
+    &:hover:not(:disabled) {
+      background: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+    }
+  `
+};
+
+// 核心按钮组件
+const Button = styled.button`
+  /* 基础样式 */
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  outline: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+  
+  /* 响应式字体 */
+  @media (max-width: var(--breakpoint-mobile)) {
+    font-size: 14px;
+  }
+  
+  /* 尺寸变体 */
+  ${props => buttonSizes[props.size || 'medium']}
+  
+  /* 样式变体 */
+  ${props => buttonVariants[props.variant || 'primary']}
+  
+  /* 状态样式 */
+  ${props => props.loading && css`
+    position: relative;
+    color: transparent !important;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: button-loading 0.8s linear infinite;
+    }
+    
+    @keyframes button-loading {
+      to { transform: rotate(360deg); }
+    }
+  `}
+  
+  ${props => props.disabled && css`
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  `}
+  
+  /* 图标支持 */
+  ${props => props.icon && css`
+    gap: var(--spacing-xs);
+  `}
+  
+  /* 全宽样式 */
+  ${props => props.fullWidth && css`
+    width: 100%;
+  `}
+  
+  /* 焦点样式 */
+  &:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+  
+  /* 活跃状态 */
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+`;
+
+// 使用示例 - 展示完整的类型支持
+interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'small' | 'medium' | 'large';
+  loading?: boolean;
+  disabled?: boolean;
+  fullWidth?: boolean;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+const PurchaseButton: React.FC<ButtonProps> = ({ 
+  children, 
+  loading, 
+  ...props 
+}) => {
+  return (
+    <Button 
+      variant="primary" 
+      size="large"
+      loading={loading}
+      {...props}
+    >
+      {loading ? '处理中...' : children}
+    </Button>
+  );
+};
+```
+
+**架构优势分析**：
+
+1. **性能分层**：基础样式（CSS变量）零运行时开销，组件样式（Styled Components）提供灵活性
+2. **主题系统**：通过CSS变量实现主题切换，避免运行时重新计算
+3. **类型安全**：完整的TypeScript支持，减少样式相关的运行时错误
+4. **可维护性**：清晰的架构分层，职责明确
+
+### 🏭 案例二：B端管理系统的性能优化实战
+
+**项目背景**：大型SaaS平台，页面复杂，表格数据量大，对性能要求极高
+
+**性能优化策略**：
+
+```javascript
+// 策略一：样式虚拟化 - 大数据表格优化
+import { FixedSizeList as List } from 'react-window';
+import { css } from '@emotion/react';
+
+// 预计算样式缓存
+const tableRowStyles = new Map();
+
+function getRowStyle(rowIndex, isSelected, isHovered) {
+  const key = `${rowIndex}-${isSelected}-${isHovered}`;
+  
+  if (tableRowStyles.has(key)) {
+    return tableRowStyles.get(key);
+  }
+  
+  const style = css`
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    
+    ${isSelected && css`
+      background: #e3f2fd;
+      border-color: #2196f3;
+    `}
+    
+    ${isHovered && css`
+      background: #f5f5f5;
+    `}
+    
+    /* 奇偶行样式 */
+    ${rowIndex % 2 === 0 && css`
+      background: #fafafa;
+    `}
+  `;
+  
+  tableRowStyles.set(key, style);
+  return style;
+}
+
+// 大数据表格组件
+function DataTable({ data, columns }) {
+  const [hoveredRow, setHoveredRow] = useState(-1);
+  const [selectedRows, setSelectedRows] = useState(new Set());
+  
+  const Row = ({ index, style }) => {
+    const rowData = data[index];
+    const isSelected = selectedRows.has(index);
+    const isHovered = hoveredRow === index;
+    
+    return (
+      <div
+        style={style}
+        css={getRowStyle(index, isSelected, isHovered)}
+        onMouseEnter={() => setHoveredRow(index)}
+        onMouseLeave={() => setHoveredRow(-1)}
+      >
+        {columns.map(column => (
+          <div key={column.key} css={column.cellStyle}>
+            {column.render ? column.render(rowData[column.key]) : rowData[column.key]}
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
+  return (
+    <List
+      height={600}
+      itemCount={data.length}
+      itemSize={48}
+    >
+      {Row}
+    </List>
+  );
+}
+
+// 策略二：CSS-in-JS 编译时优化
+// babel-plugin-emotion 配置
+// .babelrc.js
+module.exports = {
+  plugins: [
+    ['@emotion/babel-plugin', {
+      // 编译时优化配置
+      sourceMap: process.env.NODE_ENV === 'development',
+      autoLabel: process.env.NODE_ENV === 'development',
+      labelFormat: '[local]',
+      cssPropOptimization: true,
+      importMap: {
+        '@emotion/styled': {
+          styled: {
+            canonicalImport: ['@emotion/styled', 'default'],
+            styledBaseImport: ['@emotion/styled', 'default']
+          }
+        }
+      }
+    }]
+  ]
+};
+
+// 策略三：关键CSS提取和预加载
+class CriticalCSSExtractor {
+  constructor() {
+    this.usedStyles = new Set();
+    this.criticalCSS = '';
+  }
+  
+  // 收集首屏使用的样式
+  collectCriticalStyles(componentTree) {
+    const walker = (node) => {
+      if (node.type && node.type.__emotion_styles) {
+        node.type.__emotion_styles.forEach(style => {
+          this.usedStyles.add(style);
+        });
+      }
+      
+      if (node.props && node.props.children) {
+        React.Children.forEach(node.props.children, walker);
+      }
+    };
+    
+    walker(componentTree);
+    
+    // 生成关键CSS
+    this.criticalCSS = Array.from(this.usedStyles).join('\n');
+    return this.criticalCSS;
+  }
+  
+  // 注入关键CSS到HTML头部
+  injectCriticalCSS() {
+    const style = document.createElement('style');
+    style.textContent = this.criticalCSS;
+    style.setAttribute('data-critical', 'true');
+    document.head.insertBefore(style, document.head.firstChild);
+  }
+}
+
+// 策略四：样式懒加载系统
+class StyleLazyLoader {
+  constructor() {
+    this.loadedChunks = new Set();
+    this.loadingPromises = new Map();
+  }
+  
+  async loadPageStyles(pageId) {
+    if (this.loadedChunks.has(pageId)) {
+      return;
+    }
+    
+    if (this.loadingPromises.has(pageId)) {
+      return this.loadingPromises.get(pageId);
+    }
+    
+    const loadPromise = this.loadStyleChunk(pageId);
+    this.loadingPromises.set(pageId, loadPromise);
+    
+    try {
+      await loadPromise;
+      this.loadedChunks.add(pageId);
+    } finally {
+      this.loadingPromises.delete(pageId);
+    }
+  }
+  
+  async loadStyleChunk(pageId) {
+    // 动态导入页面样式
+    const styleModule = await import(`./styles/pages/${pageId}.styles.js`);
+    
+    // 注入样式到DOM
+    if (styleModule.css) {
+      const style = document.createElement('style');
+      style.textContent = styleModule.css;
+      style.setAttribute('data-page', pageId);
+      document.head.appendChild(style);
+    }
+  }
+}
+
+// 使用示例
+const styleLoader = new StyleLazyLoader();
+
+function PageComponent({ pageId }) {
+  useEffect(() => {
+    styleLoader.loadPageStyles(pageId);
+  }, [pageId]);
+  
+  return <div>页面内容</div>;
+}
+```
+
+**性能优化结果**：
+- 首屏渲染时间减少 40%
+- JavaScript bundle 大小减少 25%
+- 大数据表格滚动帧率提升到 60fps
+- 内存使用优化 30%
+
+### 🎨 案例三：设计系统的多品牌架构
+
+**项目背景**：集团公司统一设计系统，支持10+子品牌
+
+**多品牌架构设计**：
+
+```javascript
+// 品牌主题系统架构
+const BrandThemeSystem = {
+  // 核心设计令牌（Design Tokens）
+  core: {
+    // 不变的设计原子
+    spacing: [0, 4, 8, 16, 24, 32, 48, 64],
+    typography: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace']
+      },
+      fontSize: [12, 14, 16, 18, 20, 24, 32, 48],
+      lineHeight: [1.2, 1.4, 1.5, 1.6]
+    },
+    borderRadius: [0, 2, 4, 8, 16, 24],
+    shadows: [
+      'none',
+      '0 1px 3px rgba(0,0,0,0.12)',
+      '0 4px 6px rgba(0,0,0,0.16)',
+      '0 10px 25px rgba(0,0,0,0.19)'
+    ]
+  },
+  
+  // 品牌特定令牌
+  brands: {
+    mainBrand: {
+      colors: {
+        primary: '#1976d2',
+        secondary: '#dc004e',
+        // ...
+      }
+    },
+    subBrandA: {
+      colors: {
+        primary: '#8bc34a',
+        secondary: '#ff9800',
+        // ...
+      }
+    }
+    // ... 更多品牌
+  }
+};
+
+// 主题生成器
+class ThemeGenerator {
+  constructor(coreTokens) {
+    this.core = coreTokens;
+  }
+  
+  generateBrandTheme(brandConfig) {
+    return {
+      ...this.core,
+      colors: this.generateColorPalette(brandConfig.colors),
+      components: this.generateComponentTokens(brandConfig)
+    };
+  }
+  
+  generateColorPalette(brandColors) {
+    const palette = {};
+    
+    Object.entries(brandColors).forEach(([name, baseColor]) => {
+      // 生成色彩梯度
+      palette[name] = {
+        50: this.lighten(baseColor, 0.9),
+        100: this.lighten(baseColor, 0.8),
+        200: this.lighten(baseColor, 0.6),
+        300: this.lighten(baseColor, 0.4),
+        400: this.lighten(baseColor, 0.2),
+        500: baseColor, // 基准色
+        600: this.darken(baseColor, 0.2),
+        700: this.darken(baseColor, 0.4),
+        800: this.darken(baseColor, 0.6),
+        900: this.darken(baseColor, 0.8),
+      };
+    });
+    
+    return palette;
+  }
+  
+  generateComponentTokens(brandConfig) {
+    return {
+      button: {
+        primary: {
+          background: brandConfig.colors.primary,
+          color: '#ffffff',
+          borderRadius: this.core.borderRadius[2],
+          padding: `${this.core.spacing[2]}px ${this.core.spacing[4]}px`
+        }
+        // ... 更多组件令牌
+      }
+    };
+  }
+  
+  lighten(color, amount) {
+    // 颜色变亮算法实现
+    return this.adjustColor(color, amount, 'lighten');
+  }
+  
+  darken(color, amount) {
+    // 颜色变暗算法实现  
+    return this.adjustColor(color, amount, 'darken');
+  }
+  
+  adjustColor(color, amount, direction) {
+    // HSL颜色空间调整实现
+    const hsl = this.hexToHsl(color);
+    
+    if (direction === 'lighten') {
+      hsl.l = Math.min(1, hsl.l + amount);
+    } else {
+      hsl.l = Math.max(0, hsl.l - amount);
+    }
+    
+    return this.hslToHex(hsl);
+  }
+}
+
+// 运行时主题切换
+const ThemeContext = React.createContext();
+
+function MultiThemeProvider({ children }) {
+  const [currentBrand, setCurrentBrand] = useState('mainBrand');
+  const [themes] = useState(() => {
+    const generator = new ThemeGenerator(BrandThemeSystem.core);
+    const brandThemes = {};
+    
+    Object.entries(BrandThemeSystem.brands).forEach(([brandId, brandConfig]) => {
+      brandThemes[brandId] = generator.generateBrandTheme(brandConfig);
+    });
+    
+    return brandThemes;
+  });
+  
+  const currentTheme = themes[currentBrand];
+  
+  // 动态注入CSS变量
+  useEffect(() => {
+    const root = document.documentElement;
+    
+    // 清除之前的CSS变量
+    root.style.cssText = '';
+    
+    // 注入新的主题变量
+    Object.entries(currentTheme.colors).forEach(([name, shades]) => {
+      if (typeof shades === 'object') {
+        Object.entries(shades).forEach(([shade, value]) => {
+          root.style.setProperty(`--color-${name}-${shade}`, value);
+        });
+      } else {
+        root.style.setProperty(`--color-${name}`, shades);
+      }
+    });
+    
+    // 注入其他设计令牌
+    currentTheme.spacing.forEach((value, index) => {
+      root.style.setProperty(`--spacing-${index}`, `${value}px`);
+    });
+    
+  }, [currentTheme]);
+  
+  return (
+    <ThemeContext.Provider value={{ currentTheme, setCurrentBrand }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// 主题感知组件
+const ThemedButton = styled.button`
+  background: var(--color-primary-500);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--color-primary-600);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    background: var(--color-primary-700);
+    transform: translateY(0);
+  }
+`;
+```
+
+**多品牌架构优势**：
+- 一套代码支持多个品牌
+- 设计令牌统一管理
+- 运行时主题切换
+- 类型安全的主题系统
 
 ## 📚 总结
 

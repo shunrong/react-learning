@@ -22,10 +22,10 @@
     "baseUrl": ".",
     "paths": {
       "@hooks/*": ["packages/hooks-playground/src/*"],
-      "@react-15/*": ["packages/react-15-demo/src/*"],
-      "@react-16/*": ["packages/react-16-fiber/src/*"],
-      "@state/*": ["packages/state-management/src/*"],
-      "@routing/*": ["packages/routing-evolution/src/*"]
+      "@react-15/*": ["packages/react-15/src/*"],
+      "@react-16/*": ["packages/react-16/src/*"],
+      "@state/*": ["packages/state-solution/src/*"],
+      "@routing/*": ["packages/routing-solution/src/*"]
     }
   },
   "include": [
@@ -38,10 +38,5 @@
     "dist",
     "build",
     "**/node_modules/**"
-  ],
-  "references": [
-    { "path": "./packages/hooks-playground" },
-    { "path": "./packages/state-management" },
-    { "path": "./packages/routing-evolution" }
   ]
 }

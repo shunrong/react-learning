@@ -104,7 +104,7 @@ importers:
         specifier: ^5.0.0
         version: 5.4.20(@types/node@20.19.17)(terser@5.44.0)
 
-  packages/performance-optimization:
+  packages/perf-solution:
     dependencies:
       framer-motion:
         specifier: ^10.16.5
@@ -186,7 +186,7 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0
 
-  packages/react-15-demo:
+  packages/react-15:
     dependencies:
       classnames:
         specifier: ^2.3.2
@@ -235,7 +235,7 @@ importers:
         specifier: ^4.15.0
         version: 4.15.2(webpack-cli@5.1.4)(webpack@5.101.3)
 
-  packages/react-16-fiber:
+  packages/react-16:
     dependencies:
       react:
         specifier: ^18.2.0
@@ -272,7 +272,7 @@ importers:
         specifier: ^5.0.0
         version: 5.4.20(@types/node@20.19.17)(terser@5.44.0)
 
-  packages/routing-evolution:
+  packages/routing-solution:
     dependencies:
       framer-motion:
         specifier: ^10.16.4
@@ -330,7 +330,7 @@ importers:
         specifier: ^4.4.5
         version: 4.5.14(@types/node@20.19.17)(terser@5.44.0)
 
-  packages/ssr-solutions:
+  packages/ssr-solution:
     dependencies:
       framer-motion:
         specifier: ^11.11.17
@@ -388,7 +388,7 @@ importers:
         specifier: ^5.4.10
         version: 5.4.20(@types/node@20.19.17)(terser@5.44.0)
 
-  packages/state-management:
+  packages/state-solution:
     dependencies:
       '@reduxjs/toolkit':
         specifier: ^1.9.5
@@ -464,7 +464,7 @@ importers:
         specifier: ^4.4.5
         version: 4.5.14(@types/node@20.19.17)(terser@5.44.0)
 
-  packages/styling-solutions:
+  packages/styling-solution:
     dependencies:
       '@emotion/react':
         specifier: ^11.14.0
