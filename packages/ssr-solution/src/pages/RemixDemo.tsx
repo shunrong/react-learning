@@ -5,11 +5,7 @@ import {
   ExternalLink,
   BookOpen,
   Globe,
-  FileText,
   Shield,
-  Zap,
-  Play,
-  ArrowRight,
   CheckCircle,
   Lightbulb,
   Database,
@@ -527,7 +523,7 @@ export default function Todos() {
               </tr>
             </thead>
             <tbody>
-              {comparisonPoints.map((point, index) => (
+              {comparisonPoints.map((point) => (
                 <tr key={point.aspect} className='border-b border-gray-100'>
                   <td className='py-4 px-4 font-medium text-gray-900'>
                     {point.aspect}

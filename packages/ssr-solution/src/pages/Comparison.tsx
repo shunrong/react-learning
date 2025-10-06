@@ -8,7 +8,6 @@ import {
   Server,
   CheckCircle,
   XCircle,
-  Minus,
 } from 'lucide-react';
 
 export default function Comparison() {
@@ -124,19 +123,6 @@ export default function Comparison() {
     if (score >= 8) return 'text-green-600 bg-green-100';
     if (score >= 6) return 'text-yellow-600 bg-yellow-100';
     return 'text-red-600 bg-red-100';
-  };
-
-  const getFrameworkColor = (framework: string) => {
-    switch (framework) {
-      case 'nextjs':
-        return 'text-blue-600';
-      case 'remix':
-        return 'text-purple-600';
-      case 'custom':
-        return 'text-green-600';
-      default:
-        return 'text-gray-600';
-    }
   };
 
   return (
@@ -292,7 +278,7 @@ export default function Comparison() {
               </tr>
             </thead>
             <tbody>
-              {comparisonAspects.map((aspect, index) => (
+              {comparisonAspects.map((aspect) => (
                 <tr key={aspect.aspect} className='border-b border-gray-100'>
                   <td className='py-4 px-4 font-medium text-gray-900'>
                     {aspect.aspect}

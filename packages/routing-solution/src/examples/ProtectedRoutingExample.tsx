@@ -1,11 +1,10 @@
 import { useState, createContext, useContext, useEffect } from 'react';
-import { Navigate, useLocation, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Shield,
   User,
   Lock,
-  Crown,
   AlertCircle,
   ArrowRight,
   LogIn,
@@ -13,7 +12,6 @@ import {
   Eye,
   EyeOff,
   Code,
-  XCircle,
   Key,
   Settings,
 } from 'lucide-react';
@@ -144,60 +142,6 @@ function useAuth() {
 }
 
 // 路由守卫组件
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  requiredPermission?: Permission;
-  requiredRole?: UserRole;
-}
-
-function ProtectedRoute({
-  children,
-  requiredPermission,
-  requiredRole,
-}: ProtectedRouteProps) {
-  const { user, hasPermission, hasRole } = useAuth();
-  const location = useLocation();
-
-  if (!user) {
-    return (
-      <Navigate
-        to='/examples/protected/login'
-        state={{ from: location.pathname }}
-        replace
-      />
-    );
-  }
-
-  if (requiredPermission && !hasPermission(requiredPermission)) {
-    return (
-      <div className='text-center py-8'>
-        <XCircle className='w-16 h-16 text-red-400 mx-auto mb-4' />
-        <h2 className='text-xl font-semibold text-gray-900 mb-2'>权限不足</h2>
-        <p className='text-gray-600 mb-4'>您需要 "{requiredPermission}" 权限</p>
-        <Link to='/examples/protected' className='btn btn-primary'>
-          返回首页
-        </Link>
-      </div>
-    );
-  }
-
-  if (requiredRole && !hasRole(requiredRole)) {
-    return (
-      <div className='text-center py-8'>
-        <Crown className='w-16 h-16 text-yellow-400 mx-auto mb-4' />
-        <h2 className='text-xl font-semibold text-gray-900 mb-2'>
-          角色权限不足
-        </h2>
-        <p className='text-gray-600 mb-4'>您需要 "{requiredRole}" 角色</p>
-        <Link to='/examples/protected' className='btn btn-primary'>
-          返回首页
-        </Link>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
-}
 
 // 登录组件
 function LoginForm() {

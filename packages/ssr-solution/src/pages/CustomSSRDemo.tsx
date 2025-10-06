@@ -3,7 +3,6 @@ import {
   Server,
   ExternalLink,
   BookOpen,
-  Code,
   Database,
   Zap,
   Settings,
